@@ -12,6 +12,20 @@ const styles = StyleSheet.create({
   }
 })
 
+class CountEvenNumbers extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !(nextProps.count % 2);
+  }
+
+  componentDidUpdate(){
+    console.log(this.props.count);
+  }
+
+  render() {
+    return <Text style={styles.count}>{this.props.count}</Text>;
+  }
+}
+
 export default class App extends React.Component {
 
   constructor(){
@@ -36,7 +50,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.appContainer}>
-      <Text style={styles.count}>{this.state.count}</Text>
+        <CountEvenNumbers count={this.state.count} />
       </View>
     );
   }
