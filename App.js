@@ -1,8 +1,10 @@
 import React from 'react';
-import { Button, FlatList, StyleSheet, Text, View} from 'react-native';
+import { Button, SectionList, StyleSheet, Text, View} from 'react-native';
 
 import contacts, {compareNames} from './contacts' // just an array of contacts
-import Row from './Row'
+
+import { objectMethod } from '@babel/types';
+import ContactsList from './ContactsList';
 
 export default class App extends React.Component {
   state = {
@@ -18,17 +20,15 @@ export default class App extends React.Component {
     this.setState(prevState =>({ contacts: [...prevState.contacts].sort(compareNames)}))
   }
 
-  renderItem = (obj) => <Row {... (obj.item)}/>
 
-  render() {
+render() {
     return (
       <View style={styles.container}>
         <Button title="toggle contacts" onPress={this.toggleContacts} />
         <Button title="sort" onPress={this.sort} />
         {this.state.showContacts && (
-          <FlatList
-            renderItem = {this.renderItem}
-            data={this.state.contacts}
+          <ContactsList
+            contacts={this.state.contacts}
           />
         )}
       </View>

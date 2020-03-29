@@ -1,4 +1,5 @@
 {
+  "main": "node-modules/expo/AppEntry.js",
   "name": "todoApp",
   "version": "0.0.1",
   "private": true,
@@ -10,14 +11,15 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "expo": "35.0.0",
+    "expo-cli": "^3.15.5",
     "react": "16.9.0",
-    "react-native": "0.61.5",
-    "react-native-elements": "1.2.7",
-    "expo": "35.0.0"
+    "react-native": "0.59.8",
+    "react-native-elements": "1.2.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/runtime": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
     "@react-native-community/eslint-config": "^0.0.5",
     "babel-jest": "^24.9.0",
     "eslint": "^6.5.1",
