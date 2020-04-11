@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, TextInput, StyleSheet, View} from 'react-native'
+import {Button, KeyboardAvoidingView, TextInput, StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
 
 const styles  = StyleSheet.create({
@@ -7,6 +7,7 @@ const styles  = StyleSheet.create({
         flex:1,
         backgroundColor: '#fff',
         paddingTop: 20,
+        justifyContent: 'center',
     },
     input: {
         paddingHorizontal: 20,
@@ -36,9 +37,16 @@ export default class AddContactsForm extends React.Component {
             return this.validateForm()
         }
     }
-    handleNameChange = name => {
-        this.setState({name}) // or this.setState({name}, this.validateForm)
+
+    getHandler = key => val => {
+            this.setState({[key]: val})
     }
+
+    handleNameChange = this.getHandler('name')
+
+    //handleNameChange = name => {
+    //    this.setState({name}) // or this.setState({name}, this.validateForm)
+    //}
 
     handlePhoneChange = phone => {
         if (+phone >= 0 && phone.length <= 10) {
@@ -62,7 +70,33 @@ export default class AddContactsForm extends React.Component {
 
     render (){
         return (
-            <View style={styles.container}>
+            <KeyboardAvoidingView behavior="padding" style={styles.container}>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.getHandler('name')}
+                    value={this.state.name}
+                    placeholder='Name'
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.handlePhoneChange}
+                    value={this.state.phone}
+                    keyboardType='numeric'
+                    placeholder='Number'
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.handleNameChange}
+                    value={this.state.name}
+                    placeholder='Name'
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.handlePhoneChange}
+                    value={this.state.phone}
+                    keyboardType='numeric'
+                    placeholder='Number'
+                />
                 <TextInput
                     style={styles.input}
                     onChangeText={this.handleNameChange}
@@ -77,7 +111,7 @@ export default class AddContactsForm extends React.Component {
                     placeholder='Number'
                 />
                 <Button title='Add contacts' onPress={this.handleSubmit} disabled={!this.state.isFormValid}/>
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }
