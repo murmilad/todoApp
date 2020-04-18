@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react'
 import {Button, KeyboardAvoidingView, TextInput, StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
@@ -30,6 +31,7 @@ export default class AddContactsForm extends React.Component {
         name: '',
         phone: '',
         isFormValid: false,
+        this: this,
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -60,7 +62,9 @@ export default class AddContactsForm extends React.Component {
     }
 
     validateForm = () => {
-        if (+this.state.phone >= 0 && this.state.phone.length === 10 && this.state.name.length >= 3) {
+        console.log(this.state)
+        const names = this.state.name.split(' ')
+        if (+this.state.phone >= 0 && this.state.phone.length === 10 && names.length >= 2 && names[0] && names[1]) {
             this.setState({isFormValid: true})
         } else {
             this.setState({isFormValid: false})
@@ -68,38 +72,14 @@ export default class AddContactsForm extends React.Component {
 
     }
 
+
+
     render (){
         return (
             <KeyboardAvoidingView behavior="padding" style={styles.container}>
                 <TextInput
                     style={styles.input}
                     onChangeText={this.getHandler('name')}
-                    value={this.state.name}
-                    placeholder='Name'
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={this.handlePhoneChange}
-                    value={this.state.phone}
-                    keyboardType='numeric'
-                    placeholder='Number'
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={this.handleNameChange}
-                    value={this.state.name}
-                    placeholder='Name'
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={this.handlePhoneChange}
-                    value={this.state.phone}
-                    keyboardType='numeric'
-                    placeholder='Number'
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={this.handleNameChange}
                     value={this.state.name}
                     placeholder='Name'
                 />
