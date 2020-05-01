@@ -1,58 +1,39 @@
+// import Example from './examples/0-switch'
+// export default Example
+
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { Button, SectionList, StyleSheet, Text, View} from 'react-native';
 
 import contacts, {compareNames} from './contacts' // just an array of contacts
+import { NavigationContainer} from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { ContactsContext } from './ContactsContext'
+import AddContactScreen from './screens/AddContactScreen'
+import ContactListScreen from './screens/ContactListScreen'
 
-import { objectMethod } from '@babel/types';
-import ContactsList from './ContactsList';
-import AddContactsForm from './AddContactsForm';
+
+const AppNavigator  = createStackNavigator()
 
 export default class App extends React.Component {
   state = {
-    showContacts: false,
-    showForm: false,
     contacts: contacts,
+    addContact: newContact => {
+      this.setState(prevState => ({showForm: false, contacts: [...prevState.contacts, newContact]}))
+    },
   }
 
-  addContact = newContact => {
-    this.setState(prevState => ({showForm: false, contacts: [...prevState.contacts, newContact]}))
-  }
-
-  toggleContacts = () => {
-    this.setState(prevState => ({ showContacts: !prevState.showContacts }))
-  }
-
-  toggleForm = () => {
-    this.setState(prevState => ({ showForm: !prevState.showForm }))
-  }
-
-  sort = () => {
-    this.setState(prevState =>({ contacts: [...prevState.contacts].sort(compareNames)}))
-  }
-
-
-render() {
-  if(this.state.showForm) return <AddContactsForm onSubmit={this.addContact}/>
+  
+  render() {
     return (
-      <View style={styles.container}>
-        <Button title="toggle contacts" onPress={this.toggleContacts} />
-        <Button title="add contact" onPress={this.toggleForm} />
-        {this.state.showContacts && (
-          <ContactsList
-            contacts={this.state.contacts}
-          />
-        )}
-      </View>
-
+      <ContactsContext.Provider value={this.state}>
+        <NavigationContainer>
+            <AppNavigator.Navigator>
+                <AppNavigator.Screen name="ContactList" component={ContactListScreen} />
+                <AppNavigator.Screen name="AddContact" component={AddContactScreen} />
+            </AppNavigator.Navigator>
+        </NavigationContainer>
+      </ContactsContext.Provider>
     )
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingTop:2,
-  },
-});

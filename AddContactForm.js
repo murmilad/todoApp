@@ -23,6 +23,7 @@ const styles  = StyleSheet.create({
 })
 
 export default class AddContactsForm extends React.Component {
+
     static propTypes = {
         addContacts: PropTypes.func,
     }
