@@ -3,7 +3,6 @@ import {SectionList, Text} from 'react-native'
 import PropsTypes from 'prop-types'
 import Row from './Row'
 
-const renderItem = obj => <Row {... (obj.item)}/>
 
 const renderSectionHeader = obj => <Text>{obj.section.title}</Text>
 
@@ -20,6 +19,10 @@ const ContactsList = props => {
         title: letter,
         data: contactsByLetter[letter],
     }))
+
+    const renderItem = obj => <Row {... (obj.item)} onSelectContact={contact => {
+        props.onSelectContact(contact)
+    }}/>
 
     return (
         <SectionList

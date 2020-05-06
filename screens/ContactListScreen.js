@@ -3,37 +3,36 @@ import {Button, View, StyleSheet} from 'react-native'
 import { ContactsContext } from '../ContactsContext'
 import ContactsList from '../ContactsList';
 
-export default class ContactListScreen extends React.Component {
-    state = {
-        showContacts: true,
-    }
+export default function ContactListScreen ({navigation}) {
 
-    toggleContacts = () => {
-        this.setState(prevState => ({showContacts: !prevState.showContacts}))
-    }
+      navigation.setOptions({
+        headerRight: () => (
+          <Button
+            onPress={() => {navigation.navigate("AddContact")}}
+            title="Add"
+          />
+        )
+      })
 
-    showForm = () => {
-        this.props.navigation.navigate('AddContact')
-    }
 
-    render() {
-          return (
+      return (
                 <View style={styles.container}>
-                  <Button title="toggle contacts" onPress={this.toggleContacts} />
-                  <Button title="add contact" onPress={this.showForm} />
-                  {this.state.showContacts && (
-                    <ContactsContext.Consumer>
-                      {({contacts, addContact}) => (
-                            <ContactsList
-                              contacts={contacts}
-                            />
-                      )}
-                    </ContactsContext.Consumer>
-                  )}
+                  <ContactsContext.Consumer>
+                    {({contacts, addContact}) => (
+                          <ContactsList
+                            contacts={contacts}
+                            onSelectContact={(contact) => {
+                              navigation.navigate("ContactDetails",{
+                                phone: contact.phone,
+                                name:  contact.name,
+                              })
+                            }}
+                          />
+                    )}
+                  </ContactsContext.Consumer>
                 </View>
-          )
+      )
 
-        }
 }
 
 const styles = StyleSheet.create({
