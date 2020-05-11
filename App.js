@@ -104,7 +104,9 @@ export default class App extends React.Component {
               headerTintColor:'#a41034',
             }}>
                 {this.state.isLoggedIn ? (
-                    <MainNavigator.Screen 
+                    <MainNavigator.Screen  options={{
+                      headerShown: false
+                    }}
                       name="Home"
                       component={Home}
                     />
