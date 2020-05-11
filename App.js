@@ -17,6 +17,7 @@ import ContactDetailsScreen from './screens/ContactDetailsScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import Icon from 'react-native-vector-icons/Ionicons'
 
+import {fetchUsers} from './api'
 
 const MainNavigator  = createStackNavigator()
 const TabNavigator = createBottomTabNavigator()
@@ -71,8 +72,20 @@ function Home() {
 }
 
 export default class App extends React.Component {
+
+  componentDidMount(){
+    //fetchUsers().then(results => this.setState({results}))
+    this.getUsers()
+  }
+
+   getUsers = async () => {
+    const results = await fetchUsers()
+    this.setState({contacts: results})
+  }
+
+
   state = {
-    contacts: contacts,
+    contacts: null,
     addContact: newContact => {
       this.setState(prevState => ({isLoggedIn: prevState.isLoggedIn, contacts: [...prevState.contacts, newContact]}))
     },
