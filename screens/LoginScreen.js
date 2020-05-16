@@ -1,19 +1,55 @@
 import React from 'react'
-import {Button, View, StyleSheet, Text} from 'react-native'
+import {Button, View, StyleSheet, TextInput, Text} from 'react-native'
 import { ContactsContext } from '../ContactsContext'
+import {login} from '../api'
 
 class LoginScreenComponent extends React.Component {
+    state = {
+        username: '',
+        password: '',
+        err: '',
+    }
+    
+    _login = async() => {
+        try {
+            const success = await login(this.state.username, this.state.password)
+            if (success) {
+                this.props.setLoggedIn()
+            }
+        } catch (err){
+            const errMessage = err.message
+            this.setState({err: errMessage})
+        }
+    }
+
+    handleUsernameUpdate = username => {
+        this.setState({username})
+    }
+    handlePasswordUpdate = password => {
+        this.setState({password})
+    }
+
+
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.text}>You are</Text>
+                <Text style={styles.error}>{this.state.err}</Text>
+                <TextInput 
+                    placeholder="username" 
+                    value={this.state.username}
+                    onChangeText={this.handleUsernameUpdate}
+                    autoCapitalize='none'
+                />
+                <TextInput 
+                    placeholder="password"
+                    value={this.state.password}
+                    onChangeText={this.handlePasswordUpdate}
+                    secureTextEntry={true}
+                />
                 <Button title="Press to login" onPress={this._login}/>
             </View>
 
         )
-    }
-    _login = () => {
-        this.props.setLoggedIn()
     }
 }
 
@@ -34,5 +70,9 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'center',
+    },
+    error: {
+        textAlign: 'center',
+        color: 'red',
     },
 })

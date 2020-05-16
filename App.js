@@ -111,7 +111,9 @@ export default class App extends React.Component {
                       component={Home}
                     />
                 ) : (
-                    <MainNavigator.Screen
+                    <MainNavigator.Screen options={{
+                      headerShown: false
+                    }}
                       name="LoginScreen" component={LoginScreen} />
                 )}
             </MainNavigator.Navigator>
