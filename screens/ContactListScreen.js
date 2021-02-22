@@ -1,9 +1,9 @@
 import React from 'react'
 import {Button, View, StyleSheet} from 'react-native'
-import { ContactsContext } from '../ContactsContext'
-import ContactsList from '../ContactsList';
+import ContactsList from '../ContactsList'
+import {connect} from 'react-redux'
 
-export default function ContactListScreen ({navigation}) {
+function ContactListScreen ({contacts, dispatch, navigation}) {
 
       navigation.setOptions({
         headerRight: () => (
@@ -11,14 +11,12 @@ export default function ContactListScreen ({navigation}) {
             onPress={() => {navigation.navigate("AddContact")}}
             title="Add"
           />
-        )
+        ),
       })
 
 
       return (
                 <View style={styles.container}>
-                  <ContactsContext.Consumer>
-                    {({contacts, addContact}) => (
                           <ContactsList
                             contacts={contacts}
                             onSelectContact={(contact) => {
@@ -28,8 +26,6 @@ export default function ContactListScreen ({navigation}) {
                               })
                             }}
                           />
-                    )}
-                  </ContactsContext.Consumer>
                 </View>
       )
 
@@ -42,3 +38,9 @@ const styles = StyleSheet.create({
       paddingTop:2,
     },
   });
+
+const mapStateToProps = state => ({
+  contacts: state.contacts,
+})
+
+export default ContactListContainer = connect(mapStateToProps)(ContactListScreen)

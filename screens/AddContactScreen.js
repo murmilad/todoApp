@@ -1,17 +1,18 @@
 import React from 'react'
 import AddContactForm from '../AddContactForm'
-import { ContactsContext } from '../ContactsContext'
+import store from '../redux/store'
+import {connect} from 'react-redux'
 
-export default function AddContactScreen ({navigation}){
+import {addContact} from '../redux/actions'
+
+function AddContactScreen ({addContact, navigation}){
 
     return (
-        <ContactsContext.Consumer>
-            {({addContact}) => (
                 <AddContactForm onSubmit={formState => {
                     addContact(formState)
                     navigation.navigate('ContactList');
                 }}/>
-            )}
-        </ContactsContext.Consumer>
     )
 }
+
+export default AddContactContainer = connect(null, {addContact: addContact})(AddContactScreen)
