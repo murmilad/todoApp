@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {UPDATE_USER, UPDATE_CONTACT} from './actions'
+import {UPDATE_USER, UPDATE_CONTACT, SET_LOGGED_IN, LOG_IN_SENT, LOG_IN_REJECTED, LOG_IN_FULFILLED} from './actions'
 
   
 
@@ -16,26 +16,28 @@ import {UPDATE_USER, UPDATE_CONTACT} from './actions'
       return merge(state, action.payload)
      case UPDATE_CONTACT:
       return merge(state, {prevContact: action.payload})
+     case LOG_IN_FULFILLED:
+      return merge(state, {token: action.payload})
+     case LOG_IN_REJECTED:
+      return merge(state, {loginErr: action.payload})
+      
      default:
       return state
    }
  }
-
+ const isLoggedInReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SET_LOGGED_IN:
+     return action.payload
+    default:
+     return state
+  }
+}
 const reducer = combineReducers({
   user: userReducer,
   contacts: contactReducer,
+  isLoggedIn: isLoggedInReducer,
 })
-
- // action creators
- const updateUser =  update => ({
-   type: UPDATE_USER,
-   payload: update,
- })
-
- const addContact = newContact =>({
-   type: UPDATE_CONTACT,
-   payload: newContact,
- })
 
  export default reducer
   

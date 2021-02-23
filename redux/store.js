@@ -1,9 +1,19 @@
-import {createStore} from 'redux'
-import {addContact} from './actions'
+import {createStore, applyMiddleware} from 'redux'
+import thunk from 'redux-thunk'
+
+import {addContact, setLoggedIn} from './actions'
 import reducer from './reducer'
 
-
-  const store = createStore(reducer)
+/*
+  const thunk = store => next => action => {
+      if (typeof action === 'function') {
+        action(store.dispatch)
+      } else {
+        next(action)
+      }
+  }
+*/
+  const store = createStore(reducer, applyMiddleware(thunk))
 /*
   store.dispatch(updateUser({foo : 'foo'}))
   store.dispatch(updateUser({bar : 'bar'}))
@@ -12,6 +22,7 @@ import reducer from './reducer'
   store.dispatch(addContact({name : 'la h', phone: '25343664565'}))
   store.dispatch(addContact({name : 'la h', phone: '25343664565'}))
   store.dispatch(addContact({name : 'fdl sdfklj', phone: '085035830'}))
+  store.dispatch(setLoggedIn(false))
 
   console.log(store.getState())
   
