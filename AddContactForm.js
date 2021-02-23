@@ -32,7 +32,6 @@ export default class AddContactsForm extends React.Component {
         name: '',
         phone: '',
         isFormValid: false,
-        this: this,
     }
 
     componentDidUpdate(prevProps, prevState){

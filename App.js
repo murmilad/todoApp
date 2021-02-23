@@ -16,7 +16,8 @@ import ContactDetailsScreen from './screens/ContactDetailsScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {Provider, connect} from 'react-redux'
-import store from './redux/store'
+import {store, persistor} from './redux/store'
+import {PersistGate} from 'redux-persist/integration/react'
 
 const MainNavigator  = createStackNavigator()
 const TabNavigator = createBottomTabNavigator()
@@ -109,6 +110,7 @@ export default class App extends React.Component {
 
     return (
       <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
           <MainNavigator.Navigator>
           <MainNavigator.Screen  options={{
@@ -119,6 +121,7 @@ export default class App extends React.Component {
           />
           </MainNavigator.Navigator>
         </NavigationContainer>
+        </PersistGate>
       </Provider>
     )
   }
