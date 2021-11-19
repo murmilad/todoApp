@@ -31,6 +31,8 @@ local.properties
 
 # node.js
 #
+server/node_modules/
+server/gallery/
 node_modules/
 npm-debug.log
 yarn-error.log
@@ -60,3 +62,4 @@ buck-out/
 
 package.json
 .gitignore
+
