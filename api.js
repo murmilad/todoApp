@@ -9,8 +9,43 @@ export const fetchUsers = async () => {
     return results.map(processContact)
 }
 
+export const fetchGallery = async () => {
+    const response = await fetch('http://192.168.1.70:8000/getGallery', {
+           method: 'GET',
+           headers: {'content-type' : 'application/json'},
+    })
+    
+    if (response.ok){
+        const gallery = await response.json()
+        return gallery
+    }
+
+    const errorMessage = await response.text()
+
+    console.log('errorMessage ', errorMessage)
+
+    throw new Error(errorMessage)
+}
+
+export const fetchAlbum = async () => {
+    const response = await fetch('http://192.168.1.70:8000/getAlbum', {
+           method: 'GET',
+           headers: {'content-type' : 'application/json'},
+    })
+    
+    if (response.ok){
+        const album = await response.json()
+        return album
+    }
+
+    const errorMessage = await response.text()
+
+    console.log('errorMessage ', errorMessage)
+
+    throw new Error(errorMessage)
+}
 export const login = async (username, password) => {
-    const response = await fetch('http://192.168.1.70:8000', {
+    const response = await fetch('http://192.168.1.70:8000/login', {
            method: 'POST',
            headers: {'content-type' : 'application/json'},
            body: JSON.stringify({username,password}),

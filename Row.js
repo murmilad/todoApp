@@ -1,10 +1,15 @@
 import React from 'react'
-import {TouchableOpacity, Text, StyleSheet} from 'react-native'
+import {TouchableOpacity, Text, Image, StyleSheet} from 'react-native'
 
 const styles = StyleSheet.create({
    row: {
        padding: 20
-   } 
+   },
+   thumbnail: {
+    width: 50,
+    height: 50,
+   },
+
 })
 
 const Row = props => (
@@ -12,7 +17,13 @@ const Row = props => (
         props.onSelectContact(props)
     }}>
         <Text >{props.name}</Text>
-        <Text >{props.phone}</Text>
+        <Image
+            style={styles.thumbnail}
+            source={{
+                uri: 'data:image/jpg;base64,' + props.thumbnail,
+            }}  
+        />
+        <Text >{props.resume}</Text>
     </TouchableOpacity>
 
 )

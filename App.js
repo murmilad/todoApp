@@ -4,30 +4,31 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 
-import contacts, {compareNames} from './contacts' // just an array of contacts
+//import contacts, {compareNames} from './contacts' // just an array of contacts
 import { Button } from 'react-native'
 import { NavigationContainer} from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import AddContactContainer from './screens/AddContactScreen'
 import LoginScreenContainer from './screens/LoginScreen.js'
-import ContactListContainer from './screens/ContactListScreen'
+import GalleryContainer from './screens/GalleryScreen'
 import ContactDetailsScreen from './screens/ContactDetailsScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {Provider, connect} from 'react-redux'
 import {store, persistor} from './redux/store'
 import {PersistGate} from 'redux-persist/integration/react'
+import {fetchGallery} from './api'
 
 const MainNavigator  = createStackNavigator()
 const TabNavigator = createBottomTabNavigator()
 
-function Contacts() {
+function GalleryView() {
   return (
     <MainNavigator.Navigator>
       <MainNavigator.Screen 
-        name="ContactList"
-        component={ContactListContainer}
+        name="GalleryScreen"
+        component={GalleryContainer}
       />
       <MainNavigator.Screen
           name="AddContact" component={AddContactContainer} />
@@ -38,13 +39,13 @@ function Contacts() {
 }
 
 
-function Home() {
+function HomeView() {
     return (
       <TabNavigator.Navigator 
         tabBarOptions={{
           activeTintColor:'#a41034',
       }}>
-        <TabNavigator.Screen name="Contacts" component={Contacts} options={({route}) => ({
+        <TabNavigator.Screen name="GalleryView" component={GalleryView} options={({route}) => ({
           tabBarIcon: ({focused, color}) => {
               return (
               <Icon
@@ -80,8 +81,8 @@ function Main({token}){
             <MainNavigator.Screen  options={{
               headerShown: false
             }}
-              name="Home"
-              component={Home}
+              name="HomeView"
+              component={HomeView}
             />
         ) : (
             <MainNavigator.Screen options={{
@@ -100,8 +101,13 @@ const mapStateToProps = state => ({
 const MainContainer = connect(mapStateToProps)(Main)
 
 export default class App extends React.Component {
+  componentDidMount(){
+    const gallery = fetchGallery();
+    this.setState({gallery: gallery})
+  }
+  
   state = {
-    contacts: contacts,
+    gallery: [],
   }
 
   

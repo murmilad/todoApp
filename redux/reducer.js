@@ -1,12 +1,26 @@
 import {combineReducers} from 'redux'
-import {UPDATE_USER, UPDATE_CONTACT, SET_LOGGED_IN, LOG_IN_SENT, LOG_IN_REJECTED, LOG_IN_FULFILLED} from './actions'
+import {START_LOADING, STOP_LOADING, ADD_DATA, UPDATE_USER, UPDATE_CONTACT, SET_LOGGED_IN, LOG_IN_SENT, LOG_IN_REJECTED, LOG_IN_FULFILLED} from './actions'
 
   
 
  const merge = (prev, next) => Object.assign({}, prev, next )
 
- const contactReducer = (state = [], action) => {
-  if (action.type === UPDATE_CONTACT) return [...state, action.payload]
+ const galleryReducer = (state = {}, action) => {
+  switch (action.type) {
+    case START_LOADING:
+      return {...state, loading: true};
+    case STOP_LOADING:
+      return {...state, loading: false};
+    case ADD_DATA:
+      return {...state, records:[...action.value]};
+    default:
+      return state
+  }
+      
+ };
+
+ const artReducer = (state = [], action) => {
+  if (action.type === UPDATE_ART) return [...state, action.payload]
   return state
  }
  
@@ -35,7 +49,8 @@ import {UPDATE_USER, UPDATE_CONTACT, SET_LOGGED_IN, LOG_IN_SENT, LOG_IN_REJECTED
 }
 const reducer = combineReducers({
   user: userReducer,
-  contacts: contactReducer,
+  gallery: galleryReducer,
+  art:artReducer,
   isLoggedIn: isLoggedInReducer,
 })
 

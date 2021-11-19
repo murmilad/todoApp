@@ -36,5 +36,5 @@ const persistedReducer  = persistReducer(persistConfig, reducer)
   store.dispatch(addContact({name : 'fdl sdfklj', phone: '085035830'}))
   store.dispatch(setLoggedIn(false))
   console.log(store.getState())
-*/
+  */
   

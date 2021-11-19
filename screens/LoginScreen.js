@@ -18,7 +18,7 @@ class LoginScreenComponent extends React.Component {
 /*
     static getDerivedStateFromProps(props, state){
         if(props.token){
-            props.navigation.navigate('Home')
+            props.navigation.navigate('HomeView')
         }
 
         return props
