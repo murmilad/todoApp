@@ -1,6 +1,7 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
+const { exec } = require('child_process')
 
 const PORT = process.env.PORT || 8000
 
@@ -131,3 +132,11 @@ app.use((err, req, res, next) => res.status(err.status || 500).send(err.message 
 
 const server = app.listen(PORT)
 console.log(`Listening at http://localhost:${PORT}`)
+
+process.on('SIGINT', function() {
+  console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
+  // some other closing procedures go here
+  exec('npm stop');
+  process.exit(0);
+});
+//sudo mount -v -t nfs -o vers=4.0 192.168.1.65:/tmp/gfgallery /home/alex/git/podpisaka/server/gallery

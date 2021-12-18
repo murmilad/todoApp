@@ -11,7 +11,7 @@ import {START_LOADING, STOP_LOADING, ADD_DATA, UPDATE_USER, UPDATE_CONTACT, SET_
       return {...state, loading: true};
     case STOP_LOADING:
       return {...state, loading: false};
-    case ADD_DATA:
+    case ADD_GALLERY_DATA:
       return {...state, records:[...action.value]};
     default:
       return state

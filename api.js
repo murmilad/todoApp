@@ -10,7 +10,7 @@ export const fetchUsers = async () => {
 }
 
 export const fetchGallery = async () => {
-    const response = await fetch('http://192.168.1.70:8000/getGallery', {
+    const response = await fetch('http://localhost:8000/getGallery', {
            method: 'GET',
            headers: {'content-type' : 'application/json'},
     })
@@ -28,7 +28,7 @@ export const fetchGallery = async () => {
 }
 
 export const fetchAlbum = async () => {
-    const response = await fetch('http://192.168.1.70:8000/getAlbum', {
+    const response = await fetch('http://localhost:8000/getAlbum', {
            method: 'GET',
            headers: {'content-type' : 'application/json'},
     })
@@ -45,7 +45,7 @@ export const fetchAlbum = async () => {
     throw new Error(errorMessage)
 }
 export const login = async (username, password) => {
-    const response = await fetch('http://192.168.1.70:8000/login', {
+    const response = await fetch('http://localhost:8000/login', {
            method: 'POST',
            headers: {'content-type' : 'application/json'},
            body: JSON.stringify({username,password}),
