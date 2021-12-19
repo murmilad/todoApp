@@ -56,6 +56,7 @@ app.get('/getGallery', (req, res) => {
 
       let imageCount = 0;
       let signedImageCount = 0;
+      let bitmap = 0;
 
       fs.readdirSync(albumPath + '/' + main_folder, { withFileTypes: true })
         .filter(dirent => dirent.isDirectory())
@@ -64,6 +65,9 @@ app.get('/getGallery', (req, res) => {
 
           fs.readdirSync(albumPath + '/' + main_folder + '/' + folder)
             .forEach( file => {
+              if (!bitmap) {
+                bitmap = fs.readFileSync(albumPath + '/' + main_folder + '/' + folder + '/' + file)
+              }
               if (resume[file]) signedImageCount++
               imageCount++
             })
@@ -71,6 +75,9 @@ app.get('/getGallery', (req, res) => {
 
       let albumData = {}
 
+      if (bitmap) {
+        albumData.thumbnail = Buffer.from(bitmap).toString('base64')
+      }
       albumData.name = main_folder
       albumData.imageCount = imageCount
       albumData.unsignedImageCount = imageCount - signedImageCount

@@ -30,10 +30,6 @@ function GalleryView() {
         name="GalleryScreen"
         component={GalleryContainer}
       />
-      <MainNavigator.Screen
-          name="AddContact" component={AddContactContainer} />
-      <MainNavigator.Screen
-          name="ContactDetails" component={ContactDetailsScreen} />
     </MainNavigator.Navigator>
   )
 }
@@ -100,20 +96,7 @@ const mapStateToProps = state => ({
 })
 const MainContainer = connect(mapStateToProps)(Main)
 
-export default class App extends React.Component {
-  componentDidMount(){
-    const gallery = fetchGallery();
-    this.setState({gallery: gallery})
-  }
-  
-  state = {
-    gallery: [],
-  }
-
-  
-  render() {
-    console.log(this.props.isLoggedIn)
-
+export default function App() {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
@@ -130,6 +113,5 @@ export default class App extends React.Component {
         </PersistGate>
       </Provider>
     )
-  }
 }
 

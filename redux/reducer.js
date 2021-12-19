@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {START_LOADING, STOP_LOADING, ADD_DATA, UPDATE_USER, UPDATE_CONTACT, SET_LOGGED_IN, LOG_IN_SENT, LOG_IN_REJECTED, LOG_IN_FULFILLED} from './actions'
+import {ADD_GALLERY_DATA, UPDATE_ART, START_LOADING, STOP_LOADING, ADD_DATA, UPDATE_USER, UPDATE_CONTACT, SET_LOGGED_IN, LOG_IN_SENT, LOG_IN_REJECTED, LOG_IN_FULFILLED} from './actions'
 
   
 
@@ -12,7 +12,7 @@ import {START_LOADING, STOP_LOADING, ADD_DATA, UPDATE_USER, UPDATE_CONTACT, SET_
     case STOP_LOADING:
       return {...state, loading: false};
     case ADD_GALLERY_DATA:
-      return {...state, records:[...action.value]};
+      return {...state, data:[...action.payload]};
     default:
       return state
   }

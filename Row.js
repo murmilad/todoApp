@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 
 const Row = props => (
     <TouchableOpacity style={styles.row} onPress={() => {
-        props.onSelectContact(props)
+        props.onSelectAlbum(props)
     }}>
         <Text >{props.name}</Text>
         <Image
@@ -23,7 +23,8 @@ const Row = props => (
                 uri: 'data:image/jpg;base64,' + props.thumbnail,
             }}  
         />
-        <Text >{props.resume}</Text>
+        <Text >{props.imageCount}</Text>
+        <Text >{props.unsignedImageCount}</Text>
     </TouchableOpacity>
 
 )

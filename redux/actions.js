@@ -1,4 +1,4 @@
-import {login, fetchAlbums, fetchAlbum} from '../api'
+import {login, fetchGallery, fetchAlbum} from '../api'
 
 // action types
 
@@ -13,6 +13,7 @@ export const STOP_LOADING = 'STOP_LOADING'
 export const ERROR_LOADING = 'ERROR_LOADING'
 export const ADD_GALLERY_DATA = 'ADD_GALLERY_DATA'
 export const ADD_ALBUM_DATA = 'ADD_ALBUM_DATA'
+export const UPDATE_ART = 'UPDATE_ART'
 
  // action creators
  export const updateUser =  update => ({
@@ -20,8 +21,8 @@ export const ADD_ALBUM_DATA = 'ADD_ALBUM_DATA'
    payload: update,
  })
 
- export  const addContact = newContact =>({
-   type: UPDATE_CONTACT,
+ export  const addContact = newArt =>({
+   type: UPDATE_ART,
    payload: newContact,
  })
 
@@ -53,7 +54,7 @@ export  const stopLoading = () =>({
   export const loadGalleryData = () => async dispatch => {
     dispatch({type: START_LOADING})
     try {
-      const gallery = await fetchAlbums()
+      const gallery = await fetchGallery()
       dispatch({type: STOP_LOADING})
       dispatch({type: ADD_GALLERY_DATA, payload: gallery})
     } catch(err) {

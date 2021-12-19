@@ -1,0 +1,18 @@
+{
+  "name": "gallery-server",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "sudo mount -v -t nfs -o vers=4.0 192.168.1.65:/tmp/gfgallery /home/alex/git/podpisaka/server/gallery;node index.js;",
+    "stop": "sudo umount /home/alex/git/podpisaka/server/gallery",
+    "test": "echo \"Error: no test specified\" "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "child_process": "^1.0.2",
+    "express": "^4.17.1"
+  }
+}

@@ -1,11 +1,13 @@
-import React from 'react'
-import {Button, View, StyleSheet} from 'react-native'
+import {React, useEffect} from 'react'
+import {Button, View, StyleSheet, Text} from 'react-native'
 import Gallery from '../Gallery'
 import {loadGalleryData} from '../redux/actions'
 import {connect, useDispatch} from 'react-redux'
+import { useNavigation } from '@react-navigation/native';
 
-function GalleryScreen ({gallery, dispatch, navigation}) {
+function GalleryScreen (props) {
 	const dispatch = useDispatch();
+  const navigation = useNavigation();
 
 	let loadData = () => {
 		dispatch(loadGalleryData());
@@ -25,12 +27,12 @@ function GalleryScreen ({gallery, dispatch, navigation}) {
           />
         ),
       })
-
-
-      return (
+      return (<>
+        {props.loading && (<Text>Loading...</Text>)}
+        {props.gallery && (
                 <View style={styles.container}>
                           <Gallery
-                            gallery={gallery}
+                            gallery={props.gallery}
                             onSelectAlbum={(album) => {
                               navigation.navigate("Album",{
                                 name:  album.name,
@@ -38,6 +40,8 @@ function GalleryScreen ({gallery, dispatch, navigation}) {
                             }}
                           />
                 </View>
+        )}
+        </>
       )
 
 }
@@ -51,7 +55,10 @@ const styles = StyleSheet.create({
   });
 
 const mapStateToProps = state => ({
-  gallery: state.gallery,
+  gallery: state.gallery.data,
+  loading: state.gallery.loading,
 })
 
-export default GalleryContainer = connect(mapStateToProps)(GalleryScreen)
+export default connect(
+	mapStateToProps
+)(GalleryScreen)

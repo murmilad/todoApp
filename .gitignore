@@ -60,6 +60,5 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-package.json
 .gitignore
 
