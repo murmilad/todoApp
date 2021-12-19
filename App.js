@@ -5,20 +5,17 @@
 import React from 'react';
 
 //import contacts, {compareNames} from './contacts' // just an array of contacts
-import { Button } from 'react-native'
 import { NavigationContainer} from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import AddContactContainer from './screens/AddContactScreen'
 import LoginScreenContainer from './screens/LoginScreen.js'
 import GalleryContainer from './screens/GalleryScreen'
-import ContactDetailsScreen from './screens/ContactDetailsScreen'
 import SettingsScreen from './screens/SettingsScreen'
+import AlbumScreen from './screens/AlbumScreen'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {Provider, connect} from 'react-redux'
 import {store, persistor} from './redux/store'
 import {PersistGate} from 'redux-persist/integration/react'
-import {fetchGallery} from './api'
 
 const MainNavigator  = createStackNavigator()
 const TabNavigator = createBottomTabNavigator()
@@ -27,9 +24,11 @@ function GalleryView() {
   return (
     <MainNavigator.Navigator>
       <MainNavigator.Screen 
-        name="GalleryScreen"
+        name="List"
         component={GalleryContainer}
       />
+      <MainNavigator.Screen
+          name="Album" component={AlbumScreen} />
     </MainNavigator.Navigator>
   )
 }
@@ -41,7 +40,7 @@ function HomeView() {
         tabBarOptions={{
           activeTintColor:'#a41034',
       }}>
-        <TabNavigator.Screen name="GalleryView" component={GalleryView} options={({route}) => ({
+        <TabNavigator.Screen name="Gallery" component={GalleryView} options={({route}) => ({
           tabBarIcon: ({focused, color}) => {
               return (
               <Icon

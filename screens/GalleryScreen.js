@@ -1,6 +1,6 @@
 import {React, useEffect} from 'react'
 import {Button, View, StyleSheet, Text} from 'react-native'
-import Gallery from '../Gallery'
+import Gallery from '../widgets/Gallery'
 import {loadGalleryData} from '../redux/actions'
 import {connect, useDispatch} from 'react-redux'
 import { useNavigation } from '@react-navigation/native';
@@ -19,16 +19,9 @@ function GalleryScreen (props) {
 
   }, []);
   
-      navigation.setOptions({
-        headerRight: () => (
-          <Button
-            onPress={() => {navigation.navigate("AddContact")}}
-            title="Add"
-          />
-        ),
-      })
-      return (<>
-        {props.loading && (<Text>Loading...</Text>)}
+        return (<>
+        {props.err && (<Text style={styles.error}>{props.err}</Text>)}
+        {!props.err && props.loading && (<Text>Loading...</Text>)}
         {props.gallery && (
                 <View style={styles.container}>
                           <Gallery
@@ -52,9 +45,17 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       paddingTop:2,
     },
-  });
+    text: {
+      textAlign: 'center',
+  },
+  error: {
+      textAlign: 'center',
+      color: 'red',
+  },
+});
 
 const mapStateToProps = state => ({
+  err: state.gallery.err,
   gallery: state.gallery.data,
   loading: state.gallery.loading,
 })

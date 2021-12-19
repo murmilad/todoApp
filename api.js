@@ -10,7 +10,7 @@ export const fetchUsers = async () => {
 }
 
 export const fetchGallery = async () => {
-    const response = await fetch('http://192.168.1.95:8000/getGallery', {
+    const response = await fetch('http://192.168.1.95:8000/gallery', {
            method: 'GET',
            headers: {'content-type' : 'application/json'},
     })
@@ -27,8 +27,8 @@ export const fetchGallery = async () => {
     throw new Error(errorMessage)
 }
 
-export const fetchAlbum = async () => {
-    const response = await fetch('http://192.168.1.95:8000/getAlbum', {
+export const fetchAlbum = async (name) => {
+    const response = await fetch('http://192.168.1.95:8000/album/' + name, {
            method: 'GET',
            headers: {'content-type' : 'application/json'},
     })

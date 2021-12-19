@@ -2,6 +2,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const { exec } = require('child_process')
+const sizeOf = require('image-size')
 
 const PORT = process.env.PORT || 8000
 
@@ -36,7 +37,7 @@ app.post('/login', (req, res) => {
 
 // Gallery
 
-app.get('/getGallery', (req, res) => {
+app.get('/gallery', (req, res) => {
 
   let resume = {};
 
@@ -92,7 +93,7 @@ app.get('/getGallery', (req, res) => {
 
 // Album
 
-app.get('/getAlbum:album', (req, res) => {
+app.get('/album/:album', (req, res) => {
   
 
   if (!req.params.album) return res.status(400).send('Missing album')
@@ -117,8 +118,11 @@ app.get('/getAlbum:album', (req, res) => {
 
         let imageData = {}
         let bitmap = fs.readFileSync(albumPath + '/' + folder + '/' + file)
+        let dimensions = sizeOf(albumPath + '/' + folder + '/' + file)
 
         imageData.thumbnail = Buffer.from(bitmap).toString('base64')
+        imageData.width = dimensions.width
+        imageData.height = dimensions.height
         imageData.name = file
         imageData.resume = resume[file]
         albumList.push(imageData)

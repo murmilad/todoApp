@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {ADD_GALLERY_DATA, UPDATE_ART, START_LOADING, STOP_LOADING, ADD_DATA, UPDATE_USER, UPDATE_CONTACT, SET_LOGGED_IN, LOG_IN_SENT, LOG_IN_REJECTED, LOG_IN_FULFILLED} from './actions'
+import * as actions from './actions'
 
   
 
@@ -7,32 +7,55 @@ import {ADD_GALLERY_DATA, UPDATE_ART, START_LOADING, STOP_LOADING, ADD_DATA, UPD
 
  const galleryReducer = (state = {}, action) => {
   switch (action.type) {
-    case START_LOADING:
+    case actions.START_GALLERY_LOADING:
       return {...state, loading: true};
-    case STOP_LOADING:
+    case actions.STOP_GALLERY_LOADING:
       return {...state, loading: false};
-    case ADD_GALLERY_DATA:
+    case actions.ADD_GALLERY_DATA:
       return {...state, data:[...action.payload]};
+    case actions.ERROR_GALLERY_LOADING:
+      return merge(state, {err: action.payload})
+        
     default:
       return state
   }
       
  };
 
+ const albumReducer = (state = {}, action) => {
+  switch (action.type) {
+    case actions.START_ALBUM_LOADING:
+      return {...state, loading: true};
+    case actions.STOP_ALBUM_LOADING:
+      return {...state, loading: false};
+    case actions.ADD_ALBUM_DATA:
+
+      return {...state,
+        data:{...state.data, [action.payload.name]:  [...action.payload.album]}, 
+        err:undefined
+      };
+    case actions.ERROR_ALBUM_LOADING:
+      return merge(state, {err: action.payload})
+      default:
+      return state
+  }
+      
+ };
+
  const artReducer = (state = [], action) => {
-  if (action.type === UPDATE_ART) return [...state, action.payload]
+  if (action.type === actions.UPDATE_ART) return [...state, action.payload]
   return state
  }
  
  const userReducer = (state = {}, action) => {
    switch (action.type) {
-     case UPDATE_USER:
+     case actions.UPDATE_USER:
       return merge(state, action.payload)
-     case UPDATE_CONTACT:
+     case actions.UPDATE_CONTACT:
       return merge(state, {prevContact: action.payload})
-     case LOG_IN_FULFILLED:
+     case actions.LOG_IN_FULFILLED:
       return merge(state, {token: action.payload})
-     case LOG_IN_REJECTED:
+     case actions.LOG_IN_REJECTED:
       return merge(state, {loginErr: action.payload})
       
      default:
@@ -41,7 +64,7 @@ import {ADD_GALLERY_DATA, UPDATE_ART, START_LOADING, STOP_LOADING, ADD_DATA, UPD
  }
  const isLoggedInReducer = (state = {}, action) => {
   switch (action.type) {
-    case SET_LOGGED_IN:
+    case actions.SET_LOGGED_IN:
      return action.payload
     default:
      return state
@@ -50,6 +73,7 @@ import {ADD_GALLERY_DATA, UPDATE_ART, START_LOADING, STOP_LOADING, ADD_DATA, UPD
 const reducer = combineReducers({
   user: userReducer,
   gallery: galleryReducer,
+  album: albumReducer,
   art:artReducer,
   isLoggedIn: isLoggedInReducer,
 })
