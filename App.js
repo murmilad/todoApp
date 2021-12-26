@@ -12,6 +12,7 @@ import LoginScreenContainer from './screens/LoginScreen.js'
 import GalleryContainer from './screens/GalleryScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import AlbumScreen from './screens/AlbumScreen'
+import ArtScreen from './screens/ArtScreen'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {Provider, connect} from 'react-redux'
 import {store, persistor} from './redux/store'
@@ -29,6 +30,8 @@ function GalleryView() {
       />
       <MainNavigator.Screen
           name="Album" component={AlbumScreen} />
+      <MainNavigator.Screen
+          name="Art" component={ArtScreen} />
     </MainNavigator.Navigator>
   )
 }

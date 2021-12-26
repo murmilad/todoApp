@@ -11,15 +11,17 @@ const styles = StyleSheet.create({
 
 })
 
-function Art (props) {
-    const [resume, setResume] = useState(props.resume)
-    let factor = (window.width - 20) / props.width
+function AlbumRow (props) {
+    const [resume, setResume] = useState(props.item.resume)
+    let factor = (window.width - 20) / props.item.width
     return (
-        <>
+    <TouchableOpacity style={styles.row} onPress={() => {
+        props.onSelectArt(props.item, props.index)
+    }}>
         <Image
-            style={{...styles.thumbnail, height: props.height*factor, width: props.width*factor}}
+            style={{...styles.thumbnail, height: props.item.height*factor, width: props.item.width*factor}}
             source={{
-                uri: 'data:image/jpg;base64,' + props.thumbnail,
+                uri: 'data:image/jpg;base64,' + props.item.thumbnail,
             }}  
         />
         <TextInput 
@@ -28,8 +30,8 @@ function Art (props) {
             autoCapitalize='none'
             onChangeText={text=>setResume(text)}
         />
-        </>
+    </TouchableOpacity>
     )
 }
 
-export default Art
+export default AlbumRow

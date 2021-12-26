@@ -1,20 +1,21 @@
 import React from 'react'
 import {FlatList} from 'react-native'
 import PropsTypes from 'prop-types'
-import Row from './Row'
+import GalleryRow from './GalleryRow'
 
 
 
 function Gallery (props) {
 
-    const renderItem = obj => <Row {... (obj.item)} onSelectAlbum={album => {
-        props.onSelectAlbum(album)
+    const renderItem = obj => <GalleryRow {... (obj)} onSelectAlbum={(item, index) => {
+        props.onSelectAlbum(item, index)
     }}/>
 
     return (
         <FlatList
             data={props.gallery}
             renderItem={renderItem}
+            keyExtractor={item => item.name}
         />
     )
 }

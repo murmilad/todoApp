@@ -1,44 +1,23 @@
 import React, {useEffect} from 'react'
 import {Button, Text, StyleSheet, View} from 'react-native'
-import Album from '../widgets/Album'
+import Art from '../widgets/Art'
 import { useNavigation } from '@react-navigation/native';
 import {loadAlbumData} from '../redux/actions'
 import {connect, useDispatch} from 'react-redux'
 
 function AlbumScreen (props) {
-    const dispatch = useDispatch();
     const navigation = useNavigation();
 
-	let loadData = () => {
-		dispatch(loadAlbumData(props.route.params.albumName));
-	}
-
-	useEffect(()=> {
-
-		loadData();
-
-    }, []);
-
     navigation.setOptions({
-        headerTitle: props.route.params.albumName
+        headerTitle: props.route.params.artName
     })
 
     return (<>
         {props.err && (<Text style={styles.error}>{props.err}</Text>)}
         {!props.err && props.loading && (<Text>Loading...</Text>)}
-        {props.album  && (
+        {props.art  && (
                 <View style={styles.container}>
-                          <Album
-                            album={props.album}
-                            onSelectArt={(art, index) => {
-                                navigation.navigate("Art",{
-                                    albumName:  props.route.params.albumName,
-                                    artIndex:   index,
-                                    artName:    art.name,
-                                })
-    
-                              }}
-                            />
+                          <Art {... (props.art)} />
                 </View>
         )}
         </>
@@ -63,7 +42,7 @@ const styles = StyleSheet.create({
   function mapStateToProps (state, props) {
     return ({
     err: state.album.err,
-    album: state.album.data ? state.album.data[props.route.params.albumName] : undefined,
+    art: state.album.data ? state.album.data[props.route.params.albumName][props.route.params.artIndex] : undefined,
     loading: state.album.loading,
     })
   }

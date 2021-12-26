@@ -26,9 +26,9 @@ function GalleryScreen (props) {
                 <View style={styles.container}>
                           <Gallery
                             gallery={props.gallery}
-                            onSelectAlbum={(album) => {
+                            onSelectAlbum={(album, index) => {
                               navigation.navigate("Album",{
-                                name:  album.name,
+                                albumName:  album.name,
                               })
                             }}
                           />

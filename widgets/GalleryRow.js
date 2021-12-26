@@ -12,21 +12,21 @@ const styles = StyleSheet.create({
 
 })
 
-const Row = props => (
+const GalleryRow = props => (
     <TouchableOpacity style={styles.row} onPress={() => {
-        props.onSelectAlbum(props)
+        props.onSelectAlbum(props.item, props.index)
     }}>
-        <Text >{props.name}</Text>
+        <Text >{props.item.name}</Text>
         <Image
             style={styles.thumbnail}
             source={{
-                uri: 'data:image/jpg;base64,' + props.thumbnail,
+                uri: 'data:image/jpg;base64,' + props.item.thumbnail,
             }}  
         />
-        <Text >{props.imageCount}</Text>
-        <Text >{props.unsignedImageCount}</Text>
+        <Text >{props.item.imageCount}</Text>
+        <Text >{props.item.unsignedImageCount}</Text>
     </TouchableOpacity>
 
 )
 
-export default Row
+export default GalleryRow
