@@ -29,7 +29,7 @@ function AlbumScreen (props) {
         {props.album  && (
                 <View style={styles.container}>
                           <Album
-                            album={props.album}
+                            album={Object.keys(props.album).sort((a,b) =>  props.album[a].order-props.album[b].order).map(key => props.album[key])}
                             onSelectArt={(art, index) => {
                                 navigation.navigate("Art",{
                                     albumName:  props.route.params.albumName,

@@ -58,7 +58,7 @@ app.get('/gallery', (req, res) => {
       let imageCount = 0;
       let signedImageCount = 0;
       let bitmap = 0;
-
+      let thumbnails = [];
       fs.readdirSync(albumPath + '/' + main_folder, { withFileTypes: true })
         .filter(dirent => dirent.isDirectory())
         .map(dirent => dirent.name)
@@ -66,9 +66,8 @@ app.get('/gallery', (req, res) => {
 
           fs.readdirSync(albumPath + '/' + main_folder + '/' + folder)
             .forEach( file => {
-              if (!bitmap) {
-                bitmap = fs.readFileSync(albumPath + '/' + main_folder + '/' + folder + '/' + file)
-              }
+              thumbnails.push(file)
+
               if (resume[file]) signedImageCount++
               imageCount++
             })
@@ -76,9 +75,7 @@ app.get('/gallery', (req, res) => {
 
       let albumData = {}
 
-      if (bitmap) {
-        albumData.thumbnail = Buffer.from(bitmap).toString('base64')
-      }
+      albumData.thumbnail_name = thumbnails
       albumData.name = main_folder
       albumData.imageCount = imageCount
       albumData.unsignedImageCount = imageCount - signedImageCount
@@ -130,6 +127,41 @@ app.get('/album/:album', (req, res) => {
   })
 
   return res.json(albumList)
+})
+
+// Image
+
+app.get('/album/:album/image/:image', (req, res) => {
+  
+
+  if (!req.params.album) return res.status(400).send('Missing album')
+  if (!req.params.image) return res.status(400).send('Missing image')
+
+  let resume = {};
+
+
+
+  let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER + '/' + req.params.album;
+
+  let file = req.params.image
+  let imageData = {}
+  fs.readdirSync(albumPath, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory())
+    .map(dirent => dirent.name)
+    .forEach(folder => {
+
+      if (fs.existsSync(albumPath + '/' + folder + '/' + file)) {
+        let bitmap = fs.readFileSync(albumPath + '/' + folder + '/' + file)
+        let dimensions = sizeOf(albumPath + '/' + folder + '/' + file)
+
+        imageData.thumbnail = Buffer.from(bitmap).toString('base64')
+        imageData.width = dimensions.width
+        imageData.height = dimensions.height
+        imageData.name = file
+      }
+  })
+
+  return res.json(imageData)
 })
 
 // catch 404

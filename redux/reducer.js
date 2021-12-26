@@ -31,7 +31,7 @@ import * as actions from './actions'
     case actions.ADD_ALBUM_DATA:
 
       return {...state,
-        data:{...state.data, [action.payload.name]:  [...action.payload.album]}, 
+        images:{...state.images, [action.payload.name]:  {...action.payload.album}}, 
         err:undefined
       };
     case actions.ERROR_ALBUM_LOADING:
@@ -42,6 +42,29 @@ import * as actions from './actions'
       
  };
 
+
+ const imageReducer = (state = {}, action) => {
+  switch (action.type) {
+    case actions.START_IMAGE_LOADING:
+      state.data = state.data || {}
+      state.data[action.payload.albumName] = state.data[action.payload.albumName] || {}
+
+      state.data[action.payload.albumName][action.payload.imageName] = {loading: true}
+      return state
+    case actions.STOP_IMAGE_LOADING:
+      state.data[action.payload.albumName][action.payload.imageName].loading = false;
+      return state
+    case actions.ADD_IMAGE_DATA:
+      state.data[action.payload.albumName][action.payload.imageName].image = {...action.payload.image}
+      return state
+    case actions.ERROR_IMAGE_LOADING:
+      state.data[action.payload.albumName][action.payload.imageName] = {err: action.payload.err}
+      return state
+    default:
+      return state
+  }
+      
+ };
  const artReducer = (state = [], action) => {
   if (action.type === actions.UPDATE_ART) return [...state, action.payload]
   return state
@@ -74,6 +97,7 @@ const reducer = combineReducers({
   user: userReducer,
   gallery: galleryReducer,
   album: albumReducer,
+  image: imageReducer, 
   art:artReducer,
   isLoggedIn: isLoggedInReducer,
 })
