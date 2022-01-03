@@ -53,11 +53,11 @@ app.get('/gallery', (req, res) => {
   fs.readdirSync(albumPath, { withFileTypes: true })
     .filter(dirent => dirent.isDirectory())
     .map(dirent => dirent.name)
+    .sort().reverse()
     .forEach(main_folder => {
 
       let imageCount = 0;
       let signedImageCount = 0;
-      let bitmap = 0;
       let thumbnails = [];
       fs.readdirSync(albumPath + '/' + main_folder, { withFileTypes: true })
         .filter(dirent => dirent.isDirectory())
@@ -77,6 +77,7 @@ app.get('/gallery', (req, res) => {
 
       albumData.thumbnail_name = thumbnails
       albumData.name = main_folder
+      albumData.header = main_folder.replace(/^\w+_/,'').replaceAll(/-/g,' ')
       albumData.imageCount = imageCount
       albumData.unsignedImageCount = imageCount - signedImageCount
       gallery.push(albumData)
@@ -114,12 +115,8 @@ app.get('/album/:album', (req, res) => {
       fs.readdirSync(albumPath + '/' + folder).forEach( file => {
 
         let imageData = {}
-        let bitmap = fs.readFileSync(albumPath + '/' + folder + '/' + file)
-        let dimensions = sizeOf(albumPath + '/' + folder + '/' + file)
 
-        imageData.thumbnail = Buffer.from(bitmap).toString('base64')
-        imageData.width = dimensions.width
-        imageData.height = dimensions.height
+        imageData.thumbnail_name = file
         imageData.name = file
         imageData.resume = resume[file]
         albumList.push(imageData)

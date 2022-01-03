@@ -8,11 +8,11 @@ import * as actions from './actions'
  const galleryReducer = (state = {}, action) => {
   switch (action.type) {
     case actions.START_GALLERY_LOADING:
-      return {...state, loading: true};
+      return {...state, loading: true, err:undefined};
     case actions.STOP_GALLERY_LOADING:
       return {...state, loading: false};
     case actions.ADD_GALLERY_DATA:
-      return {...state, data:[...action.payload]};
+      return {...state, data:[...action.payload], err:undefined};
     case actions.ERROR_GALLERY_LOADING:
       return merge(state, {err: action.payload})
         
@@ -25,7 +25,7 @@ import * as actions from './actions'
  const albumReducer = (state = {}, action) => {
   switch (action.type) {
     case actions.START_ALBUM_LOADING:
-      return {...state, loading: true};
+      return {...state, loading: true, err:undefined};
     case actions.STOP_ALBUM_LOADING:
       return {...state, loading: false};
     case actions.ADD_ALBUM_DATA:
@@ -50,16 +50,16 @@ import * as actions from './actions'
       state.data[action.payload.albumName] = state.data[action.payload.albumName] || {}
 
       state.data[action.payload.albumName][action.payload.imageName] = {loading: true}
-      return state
+      return {...state}
     case actions.STOP_IMAGE_LOADING:
       state.data[action.payload.albumName][action.payload.imageName].loading = false;
-      return state
+      return {...state}
     case actions.ADD_IMAGE_DATA:
       state.data[action.payload.albumName][action.payload.imageName].image = {...action.payload.image}
-      return state
+      return {...state}
     case actions.ERROR_IMAGE_LOADING:
       state.data[action.payload.albumName][action.payload.imageName] = {err: action.payload.err}
-      return state
+      return {...state}
     default:
       return state
   }

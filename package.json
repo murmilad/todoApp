@@ -17,6 +17,7 @@
     "expo": "^44.0.0",
     "expo-cli": "^5.0.1",
     "isomorphic-fetch": "^3.0.0",
+    "random-int": "^3.0.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "^0.64.3",
@@ -33,7 +34,8 @@
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "twrnc": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",

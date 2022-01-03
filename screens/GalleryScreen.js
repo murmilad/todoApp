@@ -4,6 +4,7 @@ import Gallery from '../widgets/Gallery'
 import {loadGalleryData} from '../redux/actions'
 import {connect, useDispatch} from 'react-redux'
 import { useNavigation } from '@react-navigation/native';
+import tw from 'twrnc';
 
 function GalleryScreen (props) {
 	const dispatch = useDispatch();
@@ -23,7 +24,7 @@ function GalleryScreen (props) {
         {props.err && (<Text style={styles.error}>{props.err}</Text>)}
         {!props.err && props.loading && (<Text>Loading...</Text>)}
         {props.gallery && (
-                <View style={styles.container}>
+                <View style={tw`bg-blue-100`} style={styles.container}>
                           <Gallery
                             gallery={props.gallery}
                             onSelectAlbum={(album, index) => {

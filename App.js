@@ -18,6 +18,7 @@ import {Provider, connect} from 'react-redux'
 import {store, persistor} from './redux/store'
 import {PersistGate} from 'redux-persist/integration/react'
 
+
 const MainNavigator  = createStackNavigator()
 const TabNavigator = createBottomTabNavigator()
 
@@ -25,8 +26,9 @@ function GalleryView() {
   return (
     <MainNavigator.Navigator>
       <MainNavigator.Screen 
-        name="List"
+        name="Gallery"
         component={GalleryContainer}
+        
       />
       <MainNavigator.Screen
           name="Album" component={AlbumScreen} />
@@ -51,7 +53,8 @@ function HomeView() {
                 size={25}
                 color={ focused ? color : 'gray'}
               />)
-          }
+          },
+          headerShown: false,
           })}
         />
         <TabNavigator.Screen name="Settings" component={SettingsScreen} options={({route}) => ({
@@ -99,7 +102,8 @@ const mapStateToProps = state => ({
 const MainContainer = connect(mapStateToProps)(Main)
 
 export default function App() {
-    return (
+
+  return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
