@@ -4,8 +4,10 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 
+import {StatusBar} from 'react-native'
+
 //import contacts, {compareNames} from './contacts' // just an array of contacts
-import { NavigationContainer} from '@react-navigation/native'
+import { NavigationContainer, DefaultTheme} from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import LoginScreenContainer from './screens/LoginScreen.js'
@@ -17,7 +19,21 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import {Provider, connect} from 'react-redux'
 import {store, persistor} from './redux/store'
 import {PersistGate} from 'redux-persist/integration/react'
+import tw from './tailwind';
 
+
+const DarkTheme = {
+  dark: true,
+  colors: {
+    primary: tw.color('stone-100'),
+    primaryDark: tw.color('stone-100'),
+    background: tw.color('stone-900'),
+    card: tw.color('stone-900'),
+    text: tw.color('stone-100'),
+    border: tw.color('stone-700'),
+    notification: tw.color('stone-700'),
+  },
+}
 
 const MainNavigator  = createStackNavigator()
 const TabNavigator = createBottomTabNavigator()
@@ -43,7 +59,7 @@ function HomeView() {
     return (
       <TabNavigator.Navigator 
         tabBarOptions={{
-          activeTintColor:'#a41034',
+          activeTintColor:tw.color('indigo-400'),
       }}>
         <TabNavigator.Screen name="Gallery" component={GalleryView} options={({route}) => ({
           tabBarIcon: ({focused, color}) => {
@@ -51,7 +67,7 @@ function HomeView() {
               <Icon
                 name={'md-contacts'}
                 size={25}
-                color={ focused ? color : 'gray'}
+                color={ focused ? color : tw.color('stone-700')}
               />)
           },
           headerShown: false,
@@ -63,7 +79,7 @@ function HomeView() {
               <Icon
                 name={'md-options'}
                 size={25}
-                color={ focused ? color : 'gray'}
+                color={ focused ? color : tw.color('stone-700')}
               />)
           }
           })}
@@ -76,7 +92,7 @@ function HomeView() {
 function Main({token}){
   return (
     <MainNavigator.Navigator screenOptions={{
-      headerTintColor:'#a41034',
+      headerTintColor:tw.color('stone-100'),
     }} >
         {token ? (
             <MainNavigator.Screen  options={{
@@ -104,10 +120,15 @@ const MainContainer = connect(mapStateToProps)(Main)
 export default function App() {
 
   return (
+
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
-          <MainNavigator.Navigator>
+      <StatusBar 
+        backgroundColor={tw.color('black')}
+        barStyle="light-content"
+      />
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer  theme={DarkTheme} >
+          <MainNavigator.Navigator >
           <MainNavigator.Screen  options={{
             headerShown: false
           }}

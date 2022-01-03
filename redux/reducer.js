@@ -31,7 +31,7 @@ import * as actions from './actions'
     case actions.ADD_ALBUM_DATA:
 
       return {...state,
-        images:{...state.images, [action.payload.name]:  {...action.payload.album}}, 
+        data:{...state.data, [action.payload.name]:  [...action.payload.album]}, 
         err:undefined
       };
     case actions.ERROR_ALBUM_LOADING:

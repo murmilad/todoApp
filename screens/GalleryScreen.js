@@ -4,7 +4,7 @@ import Gallery from '../widgets/Gallery'
 import {loadGalleryData} from '../redux/actions'
 import {connect, useDispatch} from 'react-redux'
 import { useNavigation } from '@react-navigation/native';
-import tw from 'twrnc';
+import tw from '../tailwind';
 
 function GalleryScreen (props) {
 	const dispatch = useDispatch();
@@ -21,10 +21,10 @@ function GalleryScreen (props) {
   }, []);
   
         return (<>
-        {props.err && (<Text style={styles.error}>{props.err}</Text>)}
-        {!props.err && props.loading && (<Text>Loading...</Text>)}
+        {props.err && (<Text style={tw`pt-1 bg-stone-900 text-red-500 flex-1`}>{props.err}</Text>)}
+        {!props.err && props.loading && (<Text style={tw`pt-1 bg-stone-900 text-stone-600 flex-1`} >Loading...</Text>)}
         {props.gallery && (
-                <View style={tw`bg-blue-100`} style={styles.container}>
+                <View style={tw`pt-1 bg-stone-900 flex-1`}>
                           <Gallery
                             gallery={props.gallery}
                             onSelectAlbum={(album, index) => {
@@ -39,21 +39,6 @@ function GalleryScreen (props) {
       )
 
 }
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      paddingTop:2,
-    },
-    text: {
-      textAlign: 'center',
-  },
-  error: {
-      textAlign: 'center',
-      color: 'red',
-  },
-});
 
 const mapStateToProps = state => ({
   err: state.gallery.err,

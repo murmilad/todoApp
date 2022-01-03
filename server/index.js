@@ -118,6 +118,8 @@ app.get('/album/:album', (req, res) => {
 
         imageData.thumbnail_name = file
         imageData.name = file
+        imageData.albumName = req.params.album
+        imageData.imageName = file
         imageData.resume = resume[file]
         albumList.push(imageData)
       })

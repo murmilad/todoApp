@@ -4,6 +4,7 @@ import Album from '../widgets/Album'
 import { useNavigation } from '@react-navigation/native';
 import {loadAlbumData} from '../redux/actions'
 import {connect, useDispatch} from 'react-redux'
+import tw from '../tailwind';
 
 function AlbumScreen (props) {
     const dispatch = useDispatch();
@@ -24,19 +25,19 @@ function AlbumScreen (props) {
     })
 
     return (<>
-        {props.err && (<Text style={styles.error}>{props.err}</Text>)}
-        {!props.err && props.loading && (<Text>Loading...</Text>)}
+        {props.err && (<Text style={tw`pt-1 bg-stone-900 text-red-500 flex-1`}>{props.err}</Text>)}
+        {!props.err && props.loading && (<Text style={tw`pt-1 bg-stone-900 text-stone-600 flex-1`} >Loading...</Text>)}
         {props.album  && (
-                <View style={styles.container}>
+                <View style={tw`pt-1 bg-stone-900 flex-1`}>
                           <Album
-                            album={Object.keys(props.album).sort((a,b) =>  props.album[a].order-props.album[b].order).map(key => props.album[key])}
+                            album={props.album}
                             onSelectArt={(art, index) => {
-                                navigation.navigate("Art",{
+/*                                 navigation.navigate("Art",{
                                     albumName:  props.route.params.albumName,
                                     artIndex:   index,
                                     artName:    art.name,
                                 })
-    
+ */    
                               }}
                             />
                 </View>

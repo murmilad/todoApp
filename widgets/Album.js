@@ -2,8 +2,7 @@ import React from 'react'
 import {FlatList} from 'react-native'
 import PropsTypes from 'prop-types'
 import AlbumRow from './AlbumRow'
-
-
+import tw from '../tailwind';
 
 function Album (props) {
 

@@ -2,17 +2,10 @@ import React, { useEffect } from 'react'
 import {Dimensions, TouchableOpacity, Text, Image, StyleSheet} from 'react-native'
 import {connect, useDispatch} from 'react-redux'
 import {loadImageData} from '../redux/actions'
-import tw from 'twrnc';
+import tw from '../tailwind';
 
 const window = Dimensions.get('window');
-const styles = StyleSheet.create({
-   row: {
-       padding: 10
-   },
-   thumbnail: {
-   },
 
-})
 
 function ImageScreen (props) {
 
@@ -38,11 +31,11 @@ function ImageScreen (props) {
         let error = props.err;
     }
     return (<>
-        {props.err && (<Text style={styles.error}>{props.err}</Text>)}
-        {!props.err && props.loading && (<Text>Loading...</Text>)}
+        {props.err && (<Text style={tw`pt-1 bg-stone-900 text-red-500 flex-1`}>{props.err}</Text>)}
+        {!props.err && props.loading && (<Text style={tw`pt-1 bg-stone-900 text-stone-600 flex-1`}>Loading...</Text>)}
         {props.image && (
             <Image style={tw`bg-black`}
-                style={{...styles.thumbnail, height: props.image.height*factor, width: props.image.width*factor}}
+                style={{height: props.image.height*factor, width: props.image.width*factor}}
                 source={{
                     uri: 'data:image/jpg;base64,' + props.image.thumbnail,
                 }}  
