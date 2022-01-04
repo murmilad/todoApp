@@ -1,4 +1,4 @@
-import {login, fetchGallery, fetchAlbum, fetchImage} from '../api'
+import {login, fetchGallery, fetchAlbum, fetchArt, fetchImage} from '../api'
 
 // action types
 
@@ -26,6 +26,11 @@ export const START_IMAGE_LOADING = 'START_IMAGE_LOADING'
 export const STOP_IMAGE_LOADING = 'STOP_IMAGE_LOADING'
 export const ADD_IMAGE_DATA = 'ADD_IMAGE_DATA'
 export const ERROR_IMAGE_LOADING = 'ERROR_IMAGE_LOADING'
+
+export const START_ART_LOADING = 'START_ART_LOADING'
+export const STOP_ART_LOADING = 'STOP_ART_LOADING'
+export const ADD_ART_DATA = 'ADD_ART_DATA'
+export const ERROR_ART_LOADING = 'ERROR_ART_LOADING'
 
 export const UPDATE_ART = 'UPDATE_ART'
 
@@ -95,5 +100,16 @@ export  const stopLoading = () =>({
       dispatch({type: ADD_IMAGE_DATA, payload: {albumName, imageName, image}})
     } catch(err) {
        dispatch({type: ERROR_IMAGE_LOADING, payload: {albumName, imageName, err: err.message}})
+    }
+  }
+
+  export const loadArtData = (albumName, imageName) => async dispatch => {
+    dispatch({type: START_ART_LOADING, payload: {albumName, imageName}})
+    try {
+      const image = await fetchArt(albumName, imageName)
+      dispatch({type: STOP_ART_LOADING, payload: {albumName, imageName}})
+      dispatch({type: ADD_ART_DATA, payload: {albumName, imageName, image}})
+    } catch(err) {
+       dispatch({type: ERROR_ART_LOADING, payload: {albumName, imageName, err: err.message}})
     }
   }

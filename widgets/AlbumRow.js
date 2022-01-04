@@ -8,14 +8,6 @@ const window = Dimensions.get('window');
 
 function AlbumRow (props) {
     const [size, onLayout] = useComponentSize()
-/*     const [resume, setResume] = useState(props.item.resume)
-    <TextInput style={tw`ml-2  text-stone-100 text-xs`}
-    placeholder="your comment..." 
-    value={resume}
-    autoCapitalize='none'
-    onChangeText={text=>setResume(text)}
-/>
- */
 
     return (
     <TouchableOpacity style={tw`p-1 bg-stone-900`} onPress={() => {

@@ -10,7 +10,17 @@ const GALLERY_PATH = './gallery'
 const RESUME_FOLDER = 'resume'
 const RESUME_FILE = 'resume.txt'
 
+function getResume() {
+  let resume = {};
 
+  let data = fs.readFileSync(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, 'utf8')
+
+  data.split('\r\n').map(function(line){ 
+    resume[line.split('|')[0]] = line.split('|')[1]
+  })
+
+  return resume;
+}
 const app = express()
 app.use(bodyParser.json())
 
@@ -39,14 +49,7 @@ app.post('/login', (req, res) => {
 
 app.get('/gallery', (req, res) => {
 
-  let resume = {};
-
-  let data = fs.readFileSync(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, 'utf8')
-
-  data.split('\r\n').map(function(line){ 
-    resume[line.split('|')[0]] = line.split('|')[1]
-  })
-
+  let resume = getResume()
 
   let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER;
   let gallery = [];
@@ -96,13 +99,7 @@ app.get('/album/:album', (req, res) => {
 
   if (!req.params.album) return res.status(400).send('Missing album')
 
-  let resume = {};
-
-  let data = fs.readFileSync(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, 'utf8')
-
-  data.split('\r\n').map(function(line){ 
-    resume[line.split('|')[0]] = line.split('|')[1]
-  })
+  let resume = getResume()
 
 
   let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER + '/' + req.params.album;
@@ -136,9 +133,6 @@ app.get('/album/:album/image/:image', (req, res) => {
   if (!req.params.album) return res.status(400).send('Missing album')
   if (!req.params.image) return res.status(400).send('Missing image')
 
-  let resume = {};
-
-
 
   let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER + '/' + req.params.album;
 
@@ -157,6 +151,40 @@ app.get('/album/:album/image/:image', (req, res) => {
         imageData.width = dimensions.width
         imageData.height = dimensions.height
         imageData.name = file
+      }
+  })
+
+  return res.json(imageData)
+})
+
+// Art
+
+app.get('/album/:album/art/:art', (req, res) => {
+  
+
+  if (!req.params.album) return res.status(400).send('Missing album')
+  if (!req.params.art) return res.status(400).send('Missing art')
+
+  let resume = getResume()
+
+  let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER + '/' + req.params.album;
+
+  let file = req.params.art
+  let imageData = {}
+  fs.readdirSync(albumPath, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory())
+    .map(dirent => dirent.name)
+    .forEach(folder => {
+
+      if (fs.existsSync(albumPath + '/' + folder + '/' + file)) {
+        let bitmap = fs.readFileSync(albumPath + '/' + folder + '/' + file)
+        let dimensions = sizeOf(albumPath + '/' + folder + '/' + file)
+
+        imageData.thumbnail = Buffer.from(bitmap).toString('base64')
+        imageData.width = dimensions.width
+        imageData.height = dimensions.height
+        imageData.name = file
+        imageData.resume = resume[file]
       }
   })
 

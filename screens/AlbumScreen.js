@@ -32,12 +32,11 @@ function AlbumScreen (props) {
                           <Album
                             album={props.album}
                             onSelectArt={(art, index) => {
-/*                                 navigation.navigate("Art",{
-                                    albumName:  props.route.params.albumName,
-                                    artIndex:   index,
-                                    artName:    art.name,
+                                 navigation.navigate("Art",{
+                                    albumName:  art.albumName,
+                                    imageName:  art.imageName,
                                 })
- */    
+    
                               }}
                             />
                 </View>

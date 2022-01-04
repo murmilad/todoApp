@@ -4,8 +4,6 @@ import {connect, useDispatch} from 'react-redux'
 import {loadImageData} from '../redux/actions'
 import tw from '../tailwind';
 
-const window = Dimensions.get('window');
-
 
 function ImageScreen (props) {
 
@@ -25,14 +23,14 @@ function ImageScreen (props) {
         (props.size.height / props.size.width > props.image.height / props.image.width     
             ? props.size.height / props.image.height
             : props.size.width / props.image.width)  
-            : 1
+            : 0.5
 
     if (props.image) {
         let error = props.err;
     }
     return (<>
-        {props.err && (<Text style={tw`pt-1 bg-stone-900 text-red-500 flex-1`}>{props.err}</Text>)}
-        {!props.err && props.loading && (<Text style={tw`pt-1 bg-stone-900 text-stone-600 flex-1`}>Loading...</Text>)}
+        {props.err && (<Text style={tw`pt-1 bg-stone-900 text-red-500 `}>{props.err}</Text>)}
+        {!props.err && props.loading && (<Text style={tw`pt-1 bg-stone-900 text-stone-600 `}>Loading...</Text>)}
         {props.image && (
             <Image style={tw`bg-black`}
                 style={{height: props.image.height*factor, width: props.image.width*factor}}

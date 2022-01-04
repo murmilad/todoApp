@@ -63,6 +63,24 @@ export const fetchImage = async (albumName, imageName) => {
     throw new Error(errorMessage)
 }
 
+export const fetchArt = async (albumName, imageName) => {
+    const response = await fetch('http://192.168.1.95:8000/album/' + albumName + '/art/' + imageName, {
+           method: 'GET',
+           headers: {'content-type' : 'application/json'},
+    })
+    
+    if (response.ok){
+        const image = await response.json()
+        return image
+    }
+
+    const errorMessage = await response.text()
+
+    console.log('errorMessage ', errorMessage)
+
+    throw new Error(errorMessage)
+}
+
 export const login = async (username, password) => {
     const response = await fetch('http://192.168.1.95:8000/login', {
            method: 'POST',
