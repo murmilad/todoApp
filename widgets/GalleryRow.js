@@ -1,19 +1,11 @@
-import React, {useState, useCallback} from 'react'
-import {TouchableOpacity, Text, View, StyleSheet} from 'react-native'
+import React from 'react'
+import {TouchableOpacity, Text, View} from 'react-native'
 import ImageScreen from '../screens/ImageScreen'
 import randomInteger from 'random-int';
 import tw from '../tailwind';
+import useComponentSize from  '../useComponentSize';
 
-const useComponentSize = () => {
-    const [size, setSize] = useState(null);
-  
-    const onLayout = useCallback(event => {
-      const { width, height } = event.nativeEvent.layout;
-      setSize({ width, height });
-    }, []);
-  
-    return [size, onLayout];
-};
+
 
 function GalleryRow (props) {
     const [sizeFirst, onLayoutFirst] = useComponentSize();
@@ -58,7 +50,10 @@ function GalleryRow (props) {
                     </View>
                 </View>
             )}
-            <Text style={tw`ml-2  text-stone-100 text-xs`}>{props.item.header}</Text>
+            <Text style={tw`m-1 text-stone-100 text-xs`}>
+                <Text style={tw`text-indigo-400 text-xs`}>{props.item.header.replace(/^([^\s]+).+/,'$1')} </Text>
+                {props.item.header.replace(/^[^\s]+/,'')}
+            </Text>
         </TouchableOpacity>
     )
 }

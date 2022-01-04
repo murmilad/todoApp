@@ -30,6 +30,7 @@ function GalleryScreen (props) {
                             onSelectAlbum={(album, index) => {
                               navigation.navigate("Album",{
                                 albumName:  album.name,
+                                albumHeader:  album.header,
                               })
                             }}
                           />

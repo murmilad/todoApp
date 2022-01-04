@@ -21,7 +21,7 @@ function AlbumScreen (props) {
     }, []);
 
     navigation.setOptions({
-        headerTitle: props.route.params.albumName
+        headerTitle: props.route.params.albumHeader
     })
 
     return (<>
