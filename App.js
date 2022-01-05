@@ -71,7 +71,7 @@ function HomeView() {
               />)
           },
           headerShown: false,
-          })}
+        })}
         />
         <TabNavigator.Screen name="Settings" component={SettingsScreen} options={({route}) => ({
           tabBarIcon: ({focused, color}) => {
@@ -118,7 +118,6 @@ const mapStateToProps = state => ({
 const MainContainer = connect(mapStateToProps)(Main)
 
 export default function App() {
-
   return (
 
       <Provider store={store}>

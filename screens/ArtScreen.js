@@ -1,55 +1,82 @@
-import React, { useEffect, useState } from 'react'
-import {Dimensions, View, Text, Image, TextInput} from 'react-native'
+import React, { useEffect, useState, useLayoutEffect } from 'react'
+import {Dimensions, ScrollView, Text, Image, TextInput} from 'react-native'
 import {connect, useDispatch} from 'react-redux'
 import {loadArtData} from '../redux/actions'
+import ImageZoom from "react-native-image-pan-zoom"
+
 import tw from '../tailwind';
 
-const window = Dimensions.get('window');
 
 function ArtScreen (props) {
   const dispatch = useDispatch()
   const [resume, setResume] = useState()
+  const [imageSize, setImageSize] = useState({ width: 100, height: 100 })
 
+  let widgetHeight = 200
+  let widgetWidth = Dimensions.get("window").width
 
+  const calculateImageSize = (nativeEvent) => {
+
+    let factor = (widgetHeight / widgetWidth > nativeEvent.height / nativeEvent.width     
+            ? widgetHeight / nativeEvent.height
+            : widgetWidth / nativeEvent.width)  
+            
+
+    let width = nativeEvent.width * factor;
+    let height = nativeEvent.height * factor;
+        
+    setImageSize({ height, width })
+  }
+  
 	let loadData = () => {
 		dispatch(loadArtData(props.route.params.albumName, props.route.params.imageName));
 	}
+  
+  useLayoutEffect(() => {
+    if (props.art) {
+      calculateImageSize(props.art)
+    }
+  }, [props.art]);
 
 	useEffect(()=> {
 
 		loadData();
 
-    }, []);
+  }, []);
 
-
-    let height = 200
-    let factor = props.art ? // stretch & cut to widget size 
-        (height / window.width > props.art.height / props.art.width     
-            ? height / props.art.height
-            : window.width / props.art.width)  
-            : 0.5
-
-    if (props.art) {
-//      resume = props.art.resume;
-    }
-    return (<>
+  return (<>
         {props.err && (<Text style={tw`m-2 bg-stone-900 text-red-500 `}>{props.err}</Text>)}
         {!props.err && props.loading && (<Text style={tw`m-2 bg-stone-900 text-stone-600 `}>Loading...</Text>)}
         {props.art && (
-        <View style={tw`m-1 bg-stone-800`} >
-          <Image 
-              style={{height: props.art.height*factor, width: props.art.width*factor}}
+        <ScrollView style={tw`m-1 bg-stone-800`}>
+          <ImageZoom
+            cropWidth={widgetWidth}
+            cropHeight={imageSize.height}
+            imageWidth={imageSize.width}
+            imageHeight={imageSize.height}
+            maxOverflow={0}
+          >
+            <Image 
+              resizeMode="contain" 
+              loaderSize="large"
+              style={{height: imageSize.height, width: imageSize.width}}
               source={{
-                  uri: 'data:image/jpg;base64,' + props.art.thumbnail,
-              }}  
-          />
+                uri: 'data:image/jpg;base64,' + props.art.thumbnail,
+              }}
+            />
+          </ImageZoom>
           <TextInput style={tw`m-1 text-stone-200 text-base`}
               placeholder="your comment..." 
+              placeholderTextColor={tw.color('stone-500')}
               value={resume ? resume : props.art.resume}
               autoCapitalize='none'
               onChangeText={text=>setResume(text)}
+              multiline={true}
+              keyboardAppearance='dark'
+
           />
-        </View>
+          
+        </ScrollView>
         )}
         </>
       )
