@@ -82,7 +82,22 @@ import * as actions from './actions'
     case actions.ERROR_ART_LOADING:
       state.data[action.payload.albumName][action.payload.imageName] = {err: action.payload.err}
       return {...state}
-    default:
+      default:
+      return state
+  }
+ }
+ 
+ const alertReducer = (state = {}, action) => {
+  switch (action.type) {
+    case actions.ALERT_START:
+      return {...state, loading: true}
+    case actions.ALERT_SUCCESS:
+      return {...state, loading: false}
+    case actions.ALERT_ERROR:
+      return {...state, loading: false, err: action.payload.err}
+    case actions.ALERT_CLEAN:
+      return {}
+      default:
       return state
   }
  }
@@ -97,7 +112,6 @@ import * as actions from './actions'
       return merge(state, {token: action.payload})
      case actions.LOG_IN_REJECTED:
       return merge(state, {loginErr: action.payload})
-      
      default:
       return state
    }
@@ -117,6 +131,7 @@ const reducer = combineReducers({
   image: imageReducer, 
   art:artReducer,
   isLoggedIn: isLoggedInReducer,
+  alert: alertReducer,
 })
 
  export default reducer

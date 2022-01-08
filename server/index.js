@@ -190,11 +190,26 @@ csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume"],
           imageData.width = dimensions.width
           imageData.height = dimensions.height
           imageData.name = file
-          imageData.resume = foundResume.length > 0 ? foundResume[0].resume : undefined
+          imageData.resume = foundResume && foundResume.length > 0 ? foundResume[0].resume : undefined
         }
     })
 
     return res.json(imageData)
+  })
+  
+  app.post('/art/set', async (req, res) => {
+    const {albumName, imageName, resume} = req.body
+
+    if (!albumName || !imageName) return res.status(400).send('Missing albumName or imageName')
+
+    let foundResume = await db.get({name: imageName});
+    if (foundResume && foundResume.length > 0) {
+      await db.edit({name: imageName}, {resume: resume});
+    } else {
+      await db.add({name: imageName, resume: resume});
+    }
+
+    return res.status(200);
   })
 
   // catch 404

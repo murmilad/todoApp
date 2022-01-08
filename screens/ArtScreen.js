@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react'
-import {Dimensions, ScrollView, Text, Image, TextInput} from 'react-native'
+import {Dimensions, ScrollView, Text, Image, TextInput, View, TouchableHighlight} from 'react-native'
+import {Icon} from 'react-native-elements'
 import {connect, useDispatch} from 'react-redux'
-import {loadArtData} from '../redux/actions'
+import {loadArtData, saveArtData} from '../redux/actions'
 import ImageZoom from "react-native-image-pan-zoom"
 
 import tw from '../tailwind';
@@ -65,16 +66,25 @@ function ArtScreen (props) {
               }}
             />
           </ImageZoom>
-          <TextInput style={tw`m-1 text-stone-200 text-base`}
-              placeholder="your comment..." 
-              placeholderTextColor={tw.color('stone-500')}
-              value={resume ? resume : props.art.resume}
-              autoCapitalize='none'
-              onChangeText={text=>setResume(text)}
-              multiline={true}
-              keyboardAppearance='dark'
-
-          />
+          <View style={tw`flex-row`}>
+            <TextInput style={tw`m-1 text-stone-200 text-base`}
+                  placeholder="your comment..." 
+                  placeholderTextColor={tw.color('stone-500')}
+                  value={resume ? resume : props.art.resume}
+                  autoCapitalize='none'
+                  onChangeText={text=>setResume(text)}
+                  multiline={true}
+                  keyboardAppearance='dark'
+            />
+            <TouchableHighlight  
+              style={tw`items-center justify-center`} 
+              onPress = {()=>{dispatch(saveArtData(props.route.params.albumName, props.route.params.imageName, resume))}} 
+              underlayColor = 'transparent'>
+                <View>
+                  <Icon class="material-icons" name='save-alt' size = {20} color = {tw.color('stone-500')}  />
+                </View>
+            </TouchableHighlight>
+          </View>
           
         </ScrollView>
         )}

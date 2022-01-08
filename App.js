@@ -2,7 +2,7 @@
 // export default Example
 
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import {StatusBar} from 'react-native'
 
@@ -16,11 +16,14 @@ import SettingsScreen from './screens/SettingsScreen'
 import AlbumScreen from './screens/AlbumScreen'
 import ArtScreen from './screens/ArtScreen'
 import Icon from 'react-native-vector-icons/Ionicons'
-import {Provider, connect} from 'react-redux'
+import {Provider, connect, useDispatch} from 'react-redux'
 import {store, persistor} from './redux/store'
 import {PersistGate} from 'redux-persist/integration/react'
 import tw from './tailwind';
+import { saveArtData, ALERT_CLEAN} from './redux/actions'
 
+const MessageBarAlert = require('react-native-message-bar').MessageBar;
+const MessageBarManager = require('react-native-message-bar').MessageBarManager;
 
 const DarkTheme = {
   dark: true,
@@ -89,7 +92,20 @@ function HomeView() {
     )
 }
 
-function Main({token}){
+function Main({token, alert}){
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (alert && Object.keys(alert).length > 0) {
+      MessageBarManager.showAlert({
+        title: alert.err ? 'Error' : '',
+        message: alert.loading ? 'Loading' : alert.err ? alert.err : 'Success',
+        alertType: alert.loading ? 'info' : alert.err ? 'error' : 'success',
+      });
+      dispatch({type: ALERT_CLEAN})
+    }
+  }, [alert]);
+
   return (
     <MainNavigator.Navigator screenOptions={{
       headerTintColor:tw.color('stone-100'),
@@ -114,12 +130,18 @@ function Main({token}){
 
 const mapStateToProps = state => ({
   token: state.user.token,
+  alert: state.alert,
 })
 const MainContainer = connect(mapStateToProps)(Main)
 
 export default function App() {
-  return (
+  useEffect(() => {
+    MessageBarManager.registerMessageBar(alertEl.current)
+  }, []);
 
+  const alertEl = useRef()
+  return (
+      <>
       <Provider store={store}>
       <StatusBar 
         backgroundColor={tw.color('black')}
@@ -138,6 +160,8 @@ export default function App() {
         </NavigationContainer>
         </PersistGate>
       </Provider>
+      <MessageBarAlert ref={alertEl} />
+      </>
     )
 }
 
