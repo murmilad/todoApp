@@ -15,7 +15,7 @@ import GalleryContainer from './screens/GalleryScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import AlbumScreen from './screens/AlbumScreen'
 import ArtScreen from './screens/ArtScreen'
-import Icon from 'react-native-vector-icons/Ionicons'
+import {Icon} from 'react-native-elements'
 import {View, Text} from 'react-native'
 import {Provider, connect, useDispatch} from 'react-redux'
 import {store, persistor} from './redux/store'
@@ -70,7 +70,8 @@ function HomeView() {
           tabBarIcon: ({focused, color}) => {
               return (
               <Icon
-                name={'md-contacts'}
+                class="material-icons"
+                name="dashboard"
                 size={25}
                 color={ focused ? color : tw.color('stone-700')}
               />)
@@ -82,7 +83,8 @@ function HomeView() {
           tabBarIcon: ({focused, color}) => {
               return (
               <Icon
-                name={'md-options'}
+                class="material-icons"
+                name="settings"
                 size={25}
                 color={ focused ? color : tw.color('stone-700')}
               />)
