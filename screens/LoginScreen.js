@@ -1,83 +1,43 @@
-import React from 'react'
-import {Button, View, StyleSheet, TextInput, Text} from 'react-native'
-import { ContactsContext } from '../ContactsContext'
+import React, {useState} from 'react'
+import {Button, View, TextInput, Text, Pressable} from 'react-native'
 import {connect} from 'react-redux'
 import {logInUser} from '../redux/actions'
-import PropTypes from 'prop-types'
 
-class LoginScreenComponent extends React.Component {
-    static propTypes = {
-        err: PropTypes.string,
-        token: PropTypes.string,
-        logInUser: PropTypes.func,
-    }
-    state = {
-        username: 'username',
-        password: 'password',
-    }
-/*
-    static getDerivedStateFromProps(props, state){
-        if(props.token){
-            props.navigation.navigate('HomeView')
-        }
-
-        return props
-    }
-*/    
-    _login = async() => {
-            this.props.logInUser(this.state.username, this.state.password)
-    }
-
-    handleUsernameUpdate = username => {
-        this.setState({username})
-    }
-    handlePasswordUpdate = password => {
-        this.setState({password})
-    }
+import tw from '../tailwind';
 
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.error}>{this.props.err}</Text>
-                <TextInput 
-                    placeholder="username" 
-                    value={this.state.username}
-                    onChangeText={this.handleUsernameUpdate}
-                    autoCapitalize='none'
-                />
-                <TextInput 
-                    placeholder="password"
-                    value={this.state.password}
-                    onChangeText={this.handlePasswordUpdate}
-                    secureTextEntry={true}
-                />
-                <Button title="Press to login" onPress={this._login}/>
-            </View>
+function LoginScreenComponent (props) {
+    const [username, setUsername] = useState('username')
+    const [password, setPassword] = useState('password')
 
-        )
-    }
-}
+    
 
-function LoginScreen ({logInUser, navigation}){
     return (
-        <LoginScreenComponent navigation={navigation} logInUser={logInUser} />
+        <View style={tw`bg-stone-900 flex-1 justify-center`}>
+            <Text style={tw`ml-5 mr-5 mt-2 md-2 bg-stone-900 text-red-500 `} >{props.err}</Text>
+            <TextInput style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone-700 text-stone-200 text-base rounded-2 overflow-hidden`}
+                placeholder="username"
+                placeholderTextColor={tw.color('stone-500')}
+                value={username}
+                onChangeText={text => setUsername(text)}
+                autoCapitalize='none'
+            />
+            <TextInput style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone-700 text-stone-200 text-base rounded-2 overflow-hidden`}
+                placeholder="password"
+                placeholderTextColor={tw.color('stone-500')}
+                value={password}
+                onChangeText={text => setPassword(text)}
+                secureTextEntry={true}
+            />
+            <Pressable style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-indigo-400 rounded-2 overflow-hidden items-center`}
+                onPress={() => props.logInUser(username, password)}>
+                <Text style={tw`text-stone-200 text-base `}>Log in</Text>
+            </Pressable>
+        </View>
+
     )
 }
 
-const styles = StyleSheet.create({
-    container:{
-        justifyContent: 'center',
-        flex: 1,
-    },
-    text: {
-        textAlign: 'center',
-    },
-    error: {
-        textAlign: 'center',
-        color: 'red',
-    },
-})
 
 const mapStateToProps = state => ({
     err: state.user.loginErr,

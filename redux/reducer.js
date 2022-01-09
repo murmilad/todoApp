@@ -29,11 +29,14 @@ import * as actions from './actions'
     case actions.STOP_ALBUM_LOADING:
       return {...state, loading: false};
     case actions.ADD_ALBUM_DATA:
-
       return {...state,
         data:{...state.data, [action.payload.name]:  [...action.payload.album]}, 
         err:undefined
       };
+    case actions.UPDATE_ALBUM_DATA:
+      state.data[action.payload.albumName].filter((item, index) => item.imageName === action.payload.imageName)[0].resume = action.payload.resume
+      state.data[action.payload.albumName] = [...state.data[action.payload.albumName]]
+      return {...state};
     case actions.ERROR_ALBUM_LOADING:
       return merge(state, {err: action.payload})
       default:

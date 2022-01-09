@@ -209,7 +209,7 @@ csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume"],
       await db.add({name: imageName, resume: resume});
     }
 
-    return res.status(200);
+    return res.json({status: 'ok'});
   })
 
   // catch 404

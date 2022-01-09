@@ -16,7 +16,7 @@ function Album (props) {
     return (
         <ScrollView>
             <View style={tw`m-1 flex-row bg-stone-900`}>
-                 <View style={tw`flex-1 bg-stone-900`}>
+                <View style={tw`flex-1 bg-stone-900`}>
                     {
                     props.album.length ? 
                         props.album.filter((n, index) => index%2 == 0).map(

@@ -16,14 +16,14 @@ import SettingsScreen from './screens/SettingsScreen'
 import AlbumScreen from './screens/AlbumScreen'
 import ArtScreen from './screens/ArtScreen'
 import Icon from 'react-native-vector-icons/Ionicons'
+import {View, Text} from 'react-native'
 import {Provider, connect, useDispatch} from 'react-redux'
 import {store, persistor} from './redux/store'
 import {PersistGate} from 'redux-persist/integration/react'
 import tw from './tailwind';
 import { saveArtData, ALERT_CLEAN} from './redux/actions'
 
-const MessageBarAlert = require('react-native-message-bar').MessageBar;
-const MessageBarManager = require('react-native-message-bar').MessageBarManager;
+import Toast, { BaseToast, ErrorToast, InfoToast } from 'react-native-toast-message';
 
 const DarkTheme = {
   dark: true,
@@ -37,6 +37,8 @@ const DarkTheme = {
     notification: tw.color('stone-700'),
   },
 }
+
+
 
 const MainNavigator  = createStackNavigator()
 const TabNavigator = createBottomTabNavigator()
@@ -92,17 +94,35 @@ function HomeView() {
     )
 }
 
+const toastConfig = {
+ 
+  infoToast: ({ text1, props }) => (
+    <View style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone-800 rounded-2 overflow-hidden items-center self-stretch`}>
+      <Text style={tw`m-2 pl-2 text-stone-500 font-bold text-normal`}  >{text1}</Text>
+    </View>
+  )
+};
+
 function Main({token, alert}){
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (alert && Object.keys(alert).length > 0) {
-      MessageBarManager.showAlert({
-        title: alert.err ? 'Error' : '',
-        message: alert.loading ? 'Loading' : alert.err ? alert.err : 'Success',
-        alertType: alert.loading ? 'info' : alert.err ? 'error' : 'success',
-      });
-      dispatch({type: ALERT_CLEAN})
+
+      if (alert.loading) {
+        Toast.show({
+          type: 'infoToast',
+          text1: 'Loading',
+        })
+      } else if (alert.err) {
+        Toast.show({
+          type: 'error',
+          text1: alert.err,
+        })
+        dispatch({type: ALERT_CLEAN})
+      } else {
+        Toast.hide()
+      }
     }
   }, [alert]);
 
@@ -135,11 +155,7 @@ const mapStateToProps = state => ({
 const MainContainer = connect(mapStateToProps)(Main)
 
 export default function App() {
-  useEffect(() => {
-    MessageBarManager.registerMessageBar(alertEl.current)
-  }, []);
 
-  const alertEl = useRef()
   return (
       <>
       <Provider store={store}>
@@ -160,7 +176,7 @@ export default function App() {
         </NavigationContainer>
         </PersistGate>
       </Provider>
-      <MessageBarAlert ref={alertEl} />
+      <Toast config={toastConfig}/>
       </>
     )
 }

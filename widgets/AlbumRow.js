@@ -20,12 +20,13 @@ function AlbumRow (props) {
                 imageName={props.item.imageName}  
             />
         </View>
-        {props.item.resume &&
-            <Text style={tw`text-stone-100 text-xs`}>
+        {props.item.resume 
+            ? <Text style={tw`text-stone-100 text-xs`}>
                 <Text style={tw`text-indigo-400 text-xs`}>{props.item.resume.replace(/^([^\s]+).+/,'$1')} </Text>
                 {props.item.resume.replace(/^[^\s]+/,'')}
             </Text>
-        }
+            : <></>
+        }  
         </TouchableOpacity>
     )
 }

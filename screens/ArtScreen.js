@@ -2,7 +2,7 @@ import React, { useEffect, useState, useLayoutEffect } from 'react'
 import {Dimensions, ScrollView, Text, Image, TextInput, View, TouchableHighlight} from 'react-native'
 import {Icon} from 'react-native-elements'
 import {connect, useDispatch} from 'react-redux'
-import {loadArtData, saveArtData} from '../redux/actions'
+import {loadArtData, saveArtData, UPDATE_ALBUM_DATA} from '../redux/actions'
 import ImageZoom from "react-native-image-pan-zoom"
 
 import tw from '../tailwind';
@@ -29,13 +29,23 @@ function ArtScreen (props) {
     setImageSize({ height, width })
   }
   
-	let loadData = () => {
-		dispatch(loadArtData(props.route.params.albumName, props.route.params.imageName));
+	const loadData = () => {
+		dispatch(loadArtData(props.route.params.albumName, props.route.params.imageName))
 	}
   
+  const saveArt = () => {
+    dispatch(saveArtData(props.route.params.albumName, props.route.params.imageName, resume))
+    dispatch({type: UPDATE_ALBUM_DATA, payload: {
+      albumName: props.route.params.albumName, 
+      imageName: props.route.params.imageName,
+      resume
+    }})
+  }
+
   useLayoutEffect(() => {
     if (props.art) {
       calculateImageSize(props.art)
+      setResume(props.art.resume)
     }
   }, [props.art]);
 
@@ -70,7 +80,7 @@ function ArtScreen (props) {
             <TextInput style={tw`m-1 text-stone-200 text-base`}
                   placeholder="your comment..." 
                   placeholderTextColor={tw.color('stone-500')}
-                  value={resume ? resume : props.art.resume}
+                  value={resume}
                   autoCapitalize='none'
                   onChangeText={text=>setResume(text)}
                   multiline={true}
@@ -78,7 +88,7 @@ function ArtScreen (props) {
             />
             <TouchableHighlight  
               style={tw`items-center justify-center`} 
-              onPress = {()=>{dispatch(saveArtData(props.route.params.albumName, props.route.params.imageName, resume))}} 
+              onPress = {()=>saveArt()} 
               underlayColor = 'transparent'>
                 <View>
                   <Icon class="material-icons" name='save-alt' size = {20} color = {tw.color('stone-500')}  />

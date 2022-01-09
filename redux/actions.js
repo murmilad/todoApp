@@ -20,6 +20,7 @@ export const ERROR_GALLERY_LOADING = 'ERROR_GALLERY_LOADING'
 export const START_ALBUM_LOADING = 'START_ALBUM_LOADING'
 export const STOP_ALBUM_LOADING = 'STOP_ALBUM_LOADING'
 export const ADD_ALBUM_DATA = 'ADD_ALBUM_DATA'
+export const UPDATE_ALBUM_DATA = 'UPDATE_ALBUM_DATA'
 export const ERROR_ALBUM_LOADING = 'ERROR_ALBUM_LOADING'
 
 export const START_IMAGE_LOADING = 'START_IMAGE_LOADING'
@@ -95,7 +96,7 @@ export  const stopLoading = () =>({
     } catch(err) {
        dispatch({type: ERROR_ALBUM_LOADING, payload: err.message})
     }
-  }
+  }  
 
   export const loadImageData = (albumName, imageName) => async dispatch => {
     dispatch({type: START_IMAGE_LOADING, payload: {albumName, imageName}})
@@ -122,7 +123,7 @@ export  const stopLoading = () =>({
   export const saveArtData = (albumName, imageName, resume) => async dispatch => {
     dispatch({type: ALERT_START, payload: {albumName, imageName, resume}})
     try {
-      const image = await saveArt(albumName, imageName, resume)
+      await saveArt(albumName, imageName, resume)
       dispatch({type: ALERT_SUCCESS, payload: {albumName, imageName}})
     } catch(err) {
       dispatch({type: ALERT_ERROR, payload: {albumName, imageName, err: err.message}})
