@@ -59,6 +59,15 @@ function GalleryView() {
   )
 }
 
+function getTabBarStyle (navigation) {
+  if (navigation.getState()) {
+    let childRoute = navigation.getState().routes[navigation.getState().index]
+    if (childRoute.state && childRoute.state.routes[childRoute.state.index].name === "Art") {
+      return { display: "none" }
+    }
+  }
+  return {}
+}
 
 function HomeView() {
     return (
@@ -66,8 +75,9 @@ function HomeView() {
         tabBarOptions={{
           activeTintColor:tw.color('indigo-400'),
       }}>
-        <TabNavigator.Screen name="Gallery" component={GalleryView} options={({route}) => ({
-          tabBarIcon: ({focused, color}) => {
+        <TabNavigator.Screen name="Gallery" component={GalleryView} options={({navigation}) => ({
+            tabBarStyle: getTabBarStyle(navigation),
+            tabBarIcon: ({focused, color}) => {
               return (
               <Icon
                 class="material-icons"
@@ -79,16 +89,19 @@ function HomeView() {
           headerShown: false,
         })}
         />
-        <TabNavigator.Screen name="Settings" component={SettingsScreen} options={({route}) => ({
-          tabBarIcon: ({focused, color}) => {
-              return (
-              <Icon
-                class="material-icons"
-                name="settings"
-                size={25}
-                color={ focused ? color : tw.color('stone-700')}
-              />)
-          }
+        <TabNavigator.Screen 
+          name="Settings" 
+          component={SettingsScreen} 
+          options={({route}) => ({
+            tabBarIcon: ({focused, color}) => {
+                return (
+                <Icon
+                  class="material-icons"
+                  name="settings"
+                  size={25}
+                  color={ focused ? color : tw.color('stone-700')}
+                />)
+            }
           })}
 
         />
