@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {Button, Text, StyleSheet, View} from 'react-native'
 import Album from '../widgets/Album'
 import { useNavigation } from '@react-navigation/native';
-import {loadAlbumData} from '../redux/actions'
+import {loadAlbumData, UPDATE_GALLERY_DATA} from '../redux/actions'
 import {connect, useDispatch} from 'react-redux'
 import tw from '../tailwind';
 
@@ -19,6 +19,21 @@ function AlbumScreen (props) {
 		loadData();
 
     }, []);
+
+  useEffect(()=> {
+    if (props.album) {
+      let unsignedImageCount = props.album.length
+      props.album.forEach(element => {
+        if (element.resume) {
+          unsignedImageCount--
+        }
+      });
+      dispatch({type: UPDATE_GALLERY_DATA, payload: {
+        albumName: props.route.params.albumName, 
+        unsignedImageCount: unsignedImageCount
+      }})
+    }
+  } , [props.album]);
 
     navigation.setOptions({
         headerTitle: props.route.params.albumHeader

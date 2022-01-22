@@ -13,6 +13,9 @@ import * as actions from './actions'
       return {...state, loading: false};
     case actions.ADD_GALLERY_DATA:
       return {...state, data:[...action.payload], err:undefined};
+    case actions.UPDATE_GALLERY_DATA:
+        state.data.filter((item, index) => item.name === action.payload.albumName)[0].unsignedImageCount = action.payload.unsignedImageCount
+        return {...state,  data: [...state.data]};
     case actions.ERROR_GALLERY_LOADING:
       return merge(state, {err: action.payload})
         
