@@ -14,7 +14,7 @@ function LoginScreenComponent (props) {
 
     return (
         <View style={tw`bg-stone-900 flex-1 justify-center`}>
-            <Text style={tw`ml-5 mr-5 mt-2 md-2 bg-stone-900 text-red-500 `} >{props.err}</Text>
+            <Text style={tw`ml-5 mr-5 mt-2 mb-2 bg-stone-900 text-red-500 `} >{props.err}</Text>
             <TextInput style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone-700 text-stone-200 text-base rounded-2 overflow-hidden`}
                 placeholder="username"
                 placeholderTextColor={tw.color('stone-500')}

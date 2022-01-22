@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "sudo mount -v -t nfs -o vers=4.0 192.168.1.65:/tmp/gfgallery /home/alex/git/podpisaka/server/gallery;node index.js;",
-    "stop": "sudo umount /home/alex/git/podpisaka/server/gallery",
+    "start": "node index.js;",
     "test": "echo \"Error: no test specified\" "
   },
   "author": "",
