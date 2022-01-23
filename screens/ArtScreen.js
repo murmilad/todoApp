@@ -46,12 +46,17 @@ function ArtScreen (props) {
         {!props.err && props.loading && (<Text style={tw`m-2 bg-stone-900 text-stone-600 `}>Loading...</Text>)}
         {props.art && (
         <>
-          <View style={tw`flex-1`}  onLayout={onLayout}  >
+          <View style={tw`flex-1 relative`}  onLayout={onLayout}  >
             <ArtImage
                 size={size}
                 imageSize={props.art.size}
                 image={props.art.image}
             />
+            {editMode || ( 
+            <Text style={tw`m-1 text-stone-600 text-base bg-transparent absolute bottom-0`} >
+              {resume}
+            </Text>
+            )}
           </View>
           {editMode ? ( 
           <View style={tw`pt-2 pb-2 flex-row`}>
@@ -79,9 +84,6 @@ function ArtScreen (props) {
         </View>
         ) : (
           <>
-          <Text style={tw`m-1 text-stone-600 text-base bg-transparent`} >
-            {resume}
-          </Text>
           <View style={tw`pt-2 pb-2 flex-row`}>
             <TouchableHighlight  
               style={tw`items-center justify-center flex-1`} 
