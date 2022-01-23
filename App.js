@@ -54,7 +54,9 @@ function GalleryView() {
       <MainNavigator.Screen
           name="Album" component={AlbumScreen} />
       <MainNavigator.Screen
-          name="Art" component={ArtScreen} />
+          name="Art" component={ArtScreen} options={{
+            headerTransparent: true
+          }}/>
     </MainNavigator.Navigator>
   )
 }
@@ -182,7 +184,7 @@ export default function App() {
         <NavigationContainer  theme={DarkTheme} >
           <MainNavigator.Navigator >
           <MainNavigator.Screen  options={{
-            headerShown: false
+            headerShown: false,
           }}
             name="Main"
             component={MainContainer}

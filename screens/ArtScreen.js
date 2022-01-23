@@ -1,33 +1,19 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react'
-import {Dimensions, ScrollView, Text, Image, TextInput, View, TouchableHighlight} from 'react-native'
+import {Dimensions, ScrollView, Text, TextInput, View, TouchableHighlight} from 'react-native'
 import {Icon} from 'react-native-elements'
 import {connect, useDispatch} from 'react-redux'
 import {loadArtData, saveArtData, UPDATE_ALBUM_DATA} from '../redux/actions'
-import ImageZoom from "react-native-image-pan-zoom"
+import ArtImage from '../widgets/ArtImage'
+import useComponentSize from  '../useComponentSize';
 
 import tw from '../tailwind';
 
-
 function ArtScreen (props) {
   const dispatch = useDispatch()
+  const [editMode, setEditMode] = useState(false)
   const [resume, setResume] = useState()
-  const [imageSize, setImageSize] = useState({ width: 100, height: 100 })
+  const [size, onLayout] = useComponentSize()
 
-  let widgetHeight = 200
-  let widgetWidth = Dimensions.get("window").width
-
-  const calculateImageSize = (nativeEvent) => {
-
-    let factor = (widgetHeight / widgetWidth > nativeEvent.height / nativeEvent.width     
-            ? widgetHeight / nativeEvent.height
-            : widgetWidth / nativeEvent.width)  
-            
-
-    let width = nativeEvent.width * factor;
-    let height = nativeEvent.height * factor;
-        
-    setImageSize({ height, width })
-  }
   
 	const loadData = () => {
 		dispatch(loadArtData(props.route.params.albumName, props.route.params.imageName))
@@ -35,6 +21,7 @@ function ArtScreen (props) {
   
   const saveArt = () => {
     dispatch(saveArtData(props.route.params.albumName, props.route.params.imageName, resume))
+    setEditMode(false)
     dispatch({type: UPDATE_ALBUM_DATA, payload: {
       albumName: props.route.params.albumName, 
       imageName: props.route.params.imageName,
@@ -44,7 +31,6 @@ function ArtScreen (props) {
 
   useLayoutEffect(() => {
     if (props.art) {
-      calculateImageSize(props.art)
       setResume(props.art.resume)
     }
   }, [props.art]);
@@ -59,24 +45,16 @@ function ArtScreen (props) {
         {props.err && (<Text style={tw`m-2 bg-stone-900 text-red-500 `}>{props.err}</Text>)}
         {!props.err && props.loading && (<Text style={tw`m-2 bg-stone-900 text-stone-600 `}>Loading...</Text>)}
         {props.art && (
-        <ScrollView style={tw`m-1 bg-stone-800`}>
-          <ImageZoom
-            cropWidth={widgetWidth}
-            cropHeight={imageSize.height}
-            imageWidth={imageSize.width}
-            imageHeight={imageSize.height}
-            maxOverflow={0}
-          >
-            <Image 
-              resizeMode="contain" 
-              loaderSize="large"
-              style={{height: imageSize.height, width: imageSize.width}}
-              source={{
-                uri: 'data:image/jpg;base64,' + props.art.thumbnail,
-              }}
+        <>
+          <View style={tw`flex-1 w-100 h-100`}  onLayout={onLayout}  >
+            <ArtImage
+                size={size}
+                imageSize={props.art.size}
+                image={props.art.image}
             />
-          </ImageZoom>
-          <View style={tw`flex-row`}>
+          </View>
+          {editMode ? ( 
+          <View style={tw`pt-2 pb-2 flex-row`}>
             <TextInput style={tw`m-1 text-stone-200 text-base`}
                   placeholder="your comment..." 
                   placeholderTextColor={tw.color('stone-500')}
@@ -91,12 +69,53 @@ function ArtScreen (props) {
               onPress = {()=>saveArt()} 
               underlayColor = 'transparent'>
                 <View>
-                  <Icon class="material-icons" name='save-alt' size = {20} color = {tw.color('stone-500')}  />
+                  <Icon 
+                  class="material-icons" 
+                  name='send' 
+                  size = {20} 
+                  color = {tw.color('stone-500')}  />
                 </View>
             </TouchableHighlight>
-          </View>
-          
-        </ScrollView>
+        </View>
+        ) : (
+          <View style={tw`pt-2 pb-2 flex-row`}>
+            <TouchableHighlight  
+              style={tw`items-center justify-center flex-1`} 
+              onPress = {()=>setEditMode(true)} 
+              underlayColor = 'transparent'>
+              <Icon
+                  class="material-icons"
+                  name="visibility-off"
+                  size={25}
+                  color={tw.color('stone-700')}
+              />
+            </TouchableHighlight>
+            <TouchableHighlight  
+              style={tw`items-center justify-center flex-1`} 
+              onPress = {()=>setEditMode(true)} 
+              underlayColor = 'transparent'>
+              <Icon
+                  class="material-icons"
+                  name="edit"
+                  size={25}
+                  color={tw.color('stone-700')}
+              />
+            </TouchableHighlight>
+            <TouchableHighlight  
+              style={tw`items-center justify-center flex-1`} 
+              onPress = {()=>setEditMode(true)} 
+              underlayColor = 'transparent'>
+              <Icon
+                  class="material-icons"
+                  name="share"
+                  size={25}
+                  color={tw.color('stone-700')}
+              />
+            </TouchableHighlight>
+        </View>
+        )}
+        
+        </>
         )}
         </>
       )

@@ -4,8 +4,6 @@ import ImageScreen from '../screens/ImageScreen'
 import tw from '../tailwind';
 import useComponentSize from  '../useComponentSize';
 
-const window = Dimensions.get('window');
-
 function AlbumRow (props) {
     const [size, onLayout] = useComponentSize()
 

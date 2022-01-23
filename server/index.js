@@ -186,9 +186,8 @@ csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume"],
           let bitmap = fs.readFileSync(albumPath + '/' + folder + '/' + file)
           let dimensions = sizeOf(albumPath + '/' + folder + '/' + file)
 
-          imageData.thumbnail = Buffer.from(bitmap).toString('base64')
-          imageData.width = dimensions.width
-          imageData.height = dimensions.height
+          imageData.image = Buffer.from(bitmap).toString('base64')
+          imageData.size = {width: dimensions.width, height: dimensions.height}
           imageData.name = file
           imageData.resume = foundResume && foundResume.length > 0 ? foundResume[0].resume : undefined
         }
