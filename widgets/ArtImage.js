@@ -9,23 +9,19 @@ const window = Dimensions.get('window');
 function ArtImage (props) {
 
     let factor = props.image && props.size ? // stretch & cut to widget size 
-    (props.size.height / props.size.width > props.imageSize.height / props.imageSize.width     
-        ? props.size.height / props.imageSize.height
-        : props.size.width / props.imageSize.width)  
-        : 0.5
+        props.size.width / props.imageSize.width
+        : 1
 
     return (
     <ImageZoom
         cropWidth={props.size.width}
         cropHeight={props.size.height}
-        imageWidth={props.imageSize.width * factor}
-        imageHeight={props.imageSize.height * factor}
+        imageWidth={props.imageSize.width*factor  }
+        imageHeight={props.imageSize.height*factor }
         maxOverflow={0}
     >
         <Image 
-          resizeMode="contain" 
-          loaderSize="large"
-          style={{height: props.imageSize.height, width: props.imageSize.width}}
+          style={{height: props.imageSize.height*factor, width: props.imageSize.width*factor}}
           source={{
             uri: 'data:image/jpg;base64,' + props.image,
           }}
