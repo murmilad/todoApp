@@ -19,6 +19,7 @@ function ArtImage (props) {
         imageWidth={props.imageSize.width*factor  }
         imageHeight={props.imageSize.height*factor }
         maxOverflow={0}
+        onClick={props.onClick}
     >
         <Image 
           style={{height: props.imageSize.height*factor, width: props.imageSize.width*factor}}

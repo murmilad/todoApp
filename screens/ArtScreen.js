@@ -4,6 +4,7 @@ import {Icon} from 'react-native-elements'
 import {connect, useDispatch} from 'react-redux'
 import {loadArtData, saveArtData, UPDATE_ALBUM_DATA} from '../redux/actions'
 import ArtImage from '../widgets/ArtImage'
+import ArtText from '../widgets/ArtText'
 import useComponentSize from  '../useComponentSize';
 
 import tw from '../tailwind';
@@ -13,7 +14,6 @@ function ArtScreen (props) {
   const [editMode, setEditMode] = useState(false)
   const [resume, setResume] = useState()
   const [size, onLayout] = useComponentSize()
-
   
 	const loadData = () => {
 		dispatch(loadArtData(props.route.params.albumName, props.route.params.imageName))
@@ -28,6 +28,7 @@ function ArtScreen (props) {
       resume
     }})
   }
+  
 
   useLayoutEffect(() => {
     if (props.art) {
@@ -45,12 +46,13 @@ function ArtScreen (props) {
         {props.err && (<Text style={tw`m-2 bg-stone-900 text-red-500 `}>{props.err}</Text>)}
         {!props.err && props.loading && (<Text style={tw`m-2 bg-stone-900 text-stone-600 `}>Loading...</Text>)}
         {props.art && (
-        <>
+        <>  
           <View style={tw`flex-1 relative`}  onLayout={onLayout}  >
             <ArtImage
                 size={size}
                 imageSize={props.art.size}
                 image={props.art.image}
+                onClick={()=>setEditMode(false)}
             />
             {editMode || ( 
             <Text style={tw`m-1 text-stone-600 text-base bg-transparent absolute bottom-0`} >
@@ -58,31 +60,12 @@ function ArtScreen (props) {
             </Text>
             )}
           </View>
-          {editMode ? ( 
-          <View style={tw`pt-2 pb-2 flex-row`}>
-            <TextInput style={tw`m-1 text-stone-200 text-base flex-1`}
-                  placeholder="your comment..." 
-                  placeholderTextColor={tw.color('stone-500')}
-                  value={resume}
-                  autoCapitalize='none'
-                  onChangeText={text=>setResume(text)}
-                  multiline={true}
-                  keyboardAppearance='dark'
-            />
-            <TouchableHighlight  
-              style={tw`items-center justify-center m-2`} 
-              onPress = {()=>saveArt()} 
-              underlayColor = 'transparent'>
-                <View>
-                  <Icon 
-                  class="material-icons" 
-                  name='send' 
-                  size = {20} 
-                  color = {tw.color('stone-500')}  />
-                </View>
-            </TouchableHighlight>
-        </View>
-        ) : (
+          {editMode ? (<ArtText
+            resume={resume}
+            setResume={setResume}
+            saveArt={saveArt}
+          /> 
+          ) : (
           <>
           <View style={tw`pt-2 pb-2 flex-row`}>
             <TouchableHighlight  
