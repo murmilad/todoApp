@@ -21,7 +21,8 @@ import {Provider, connect, useDispatch} from 'react-redux'
 import {store, persistor} from './redux/store'
 import {PersistGate} from 'redux-persist/integration/react'
 import tw from './tailwind';
-import { saveArtData, ALERT_CLEAN} from './redux/actions'
+import { checkConnection, ALERT_CLEAN} from './redux/actions'
+
 
 import Toast, { BaseToast, ErrorToast, InfoToast } from 'react-native-toast-message';
 
@@ -114,15 +115,27 @@ function HomeView() {
 const toastConfig = {
  
   infoToast: ({ text1, props }) => (
-    <View style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone-800 rounded-2 overflow-hidden items-center self-stretch`}>
+    <View style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone-800 rounded-8 overflow-hidden items-center self-stretch`}>
       <Text style={tw`m-2 pl-2 text-stone-500 font-bold text-normal`}  >{text1}</Text>
+    </View>
+  ),
+  errorToast: ({ text1, props }) => (
+    <View style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone-800 rounded-8 overflow-hidden items-center self-stretch`}>
+      <Text style={tw`m-2 pl-2 text-red-500 font-bold text-normal`}  >{text1}</Text>
     </View>
   )
 };
 
-function Main({token, alert}){
+function Main({token, alert, connected, loading}){
   const dispatch = useDispatch()
 
+  
+  useEffect(()=> {
+
+    dispatch(checkConnection());
+
+  }, []);
+	
   useEffect(() => {
     if (alert && Object.keys(alert).length > 0) {
 
@@ -133,7 +146,7 @@ function Main({token, alert}){
         })
       } else if (alert.err) {
         Toast.show({
-          type: 'error',
+          type: 'errorToast',
           text1: alert.err,
         })
         dispatch({type: ALERT_CLEAN})
@@ -147,7 +160,8 @@ function Main({token, alert}){
     <MainNavigator.Navigator screenOptions={{
       headerTintColor:tw.color('stone-100'),
     }} >
-        {token ? (
+      {(connected ? ( 
+        token ? (
             <MainNavigator.Screen  options={{
               headerShown: false
             }}
@@ -159,13 +173,23 @@ function Main({token, alert}){
               headerShown: false
             }}
               name="LoginScreen" component={LoginScreenContainer} />
-        )}
+        )
+      ) : (
+        <MainNavigator.Screen  options={{
+          headerShown: false
+        }}
+          name="SettingsScreen"
+          component={SettingsScreen}
+        />
+      ))}
       </MainNavigator.Navigator>
   )
 }
 
 
 const mapStateToProps = state => ({
+  connected: state.config.connected,
+  loading: state.config.loading,
   token: state.user.token,
   alert: state.alert,
 })

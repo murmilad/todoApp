@@ -1,4 +1,4 @@
-import {login, fetchGallery, fetchAlbum, fetchArt, fetchImage, saveArt} from '../api'
+import {login, fetchConnection, fetchGallery, fetchAlbum, fetchArt, fetchImage, saveArt} from '../api'
 
 // action types
 
@@ -40,6 +40,12 @@ export const ALERT_ERROR = 'ALERT_ERROR'
 export const ALERT_CLEAN = 'ALERT_CLEAN'
 
 export const UPDATE_ART = 'UPDATE_ART'
+
+
+export const SAVE_CONFIG = 'SAVE_CONFIG'
+export const SET_CHECK_CONNECTION = 'CHECK_CONNECTION'
+export const START_CHECK_CONNECTION = 'START_CHECK_CONNECTION'
+export const STOP_CHECK_CONNECTION = 'STOP_CHECK_CONNECTION'
 
  // action creators
  export const updateUser =  update => ({
@@ -128,5 +134,20 @@ export  const stopLoading = () =>({
       dispatch({type: ALERT_SUCCESS, payload: {albumName, imageName}})
     } catch(err) {
       dispatch({type: ALERT_ERROR, payload: {albumName, imageName, err: err.message}})
+    }
+  }
+
+  export const checkConnection = () => async dispatch => {
+    dispatch({type: START_CHECK_CONNECTION})
+    dispatch({type: ALERT_START, payload: {}})
+    try {
+      await fetchConnection()
+      dispatch({type: STOP_CHECK_CONNECTION})
+      dispatch({type: ALERT_SUCCESS, payload: true})
+      dispatch({type: SET_CHECK_CONNECTION, payload: {checked: true}})
+    } catch(err) {
+      dispatch({type: STOP_CHECK_CONNECTION})
+      dispatch({type: ALERT_ERROR, payload: {checked: false, err: err.message}})
+      dispatch({type: SET_CHECK_CONNECTION, payload: false})
     }
   }

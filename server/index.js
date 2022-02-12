@@ -48,6 +48,11 @@ csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume"],
     return res.json({token:'thisIsARealToken'})
   })
 
+  app.get('/check', (req, res) =>  {
+
+    return res.json({result:'ok'})
+  })
+
 
   // Gallery
 

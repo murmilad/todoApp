@@ -1,16 +1,44 @@
+import {store} from './redux/store';
+
+let config = {};
+store.subscribe(() => {
+    // When state will be updated(in our case, when items will be fetched), 
+    // we will update local component state and force component to rerender 
+    // with new data.
+
+    config = store.getState().config;
+});
+
 const processContact = contact => ({
     name: `${contact.name.first} ${contact.name.last}`,
     phone: contact.phone,
 })
 
-export const fetchUsers = async () => {
-    const response = await fetch('https://randomuser.me/api/?results=50&nat=us')
-    const {results} = await response.json()
-    return results.map(processContact)
+
+export const fetchConnection = async () => {
+    console.log('fetch ', 'http://'+config.server+':'+config.port+'/check')
+
+    const response = await fetch('http://'+config.server+':'+config.port+'/check', {
+           method: 'GET',
+           headers: {'content-type' : 'application/json'},
+    })
+    console.log('response  ', response)
+
+    if (response.ok){
+        console.log('response ok ', response)
+        const status = await response.json()
+        return status
+    }
+
+    const errorMessage = await response.text()
+
+    console.log('errorMessage ', errorMessage)
+
+    throw new Error(errorMessage)
 }
 
 export const fetchGallery = async () => {
-    const response = await fetch('http://192.168.1.95:8000/gallery', {
+    const response = await fetch('http://'+config.server+':'+config.port+'/gallery', {
            method: 'GET',
            headers: {'content-type' : 'application/json'},
     })
@@ -28,7 +56,7 @@ export const fetchGallery = async () => {
 }
 
 export const fetchAlbum = async (name) => {
-    const response = await fetch('http://192.168.1.95:8000/album/' + name, {
+    const response = await fetch('http://'+config.server+':'+config.port+'/album/' + name, {
            method: 'GET',
            headers: {'content-type' : 'application/json'},
     })
@@ -46,7 +74,7 @@ export const fetchAlbum = async (name) => {
 }
 
 export const fetchImage = async (albumName, imageName) => {
-    const response = await fetch('http://192.168.1.95:8000/album/' + albumName + '/image/' + imageName, {
+    const response = await fetch('http://'+config.server+':'+config.port+'/album/' + albumName + '/image/' + imageName, {
            method: 'GET',
            headers: {'content-type' : 'application/json'},
     })
@@ -64,7 +92,7 @@ export const fetchImage = async (albumName, imageName) => {
 }
 
 export const fetchArt = async (albumName, imageName) => {
-    const response = await fetch('http://192.168.1.95:8000/album/' + albumName + '/art/' + imageName, {
+    const response = await fetch('http://'+config.server+':'+config.port+'/album/' + albumName + '/art/' + imageName, {
            method: 'GET',
            headers: {'content-type' : 'application/json'},
     })
@@ -82,7 +110,7 @@ export const fetchArt = async (albumName, imageName) => {
 }
 
 export const saveArt = async (albumName, imageName, resume) => {
-    const response = await fetch('http://192.168.1.95:8000/art/set', {
+    const response = await fetch('http://'+config.server+':'+config.port+'/art/set', {
            method: 'POST',
            headers: {'content-type' : 'application/json'},
            body: JSON.stringify({albumName, imageName, resume}),
@@ -101,7 +129,7 @@ export const saveArt = async (albumName, imageName, resume) => {
 }
 
 export const login = async (username, password) => {
-    const response = await fetch('http://192.168.1.95:8000/login', {
+    const response = await fetch('http://'+config.server+':'+config.port+'/login', {
            method: 'POST',
            headers: {'content-type' : 'application/json'},
            body: JSON.stringify({username,password}),

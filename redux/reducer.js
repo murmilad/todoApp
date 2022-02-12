@@ -108,6 +108,22 @@ import * as actions from './actions'
   }
  }
  
+ const configReducer = (state = {}, action) => {
+  switch (action.type) {
+    case actions.SAVE_CONFIG:
+      return merge(state, {server: action.payload.server, port: action.payload.port})
+    case actions.START_CHECK_CONNECTION:
+      return {...state, loading: true, connected: false};
+    case actions.STOP_CHECK_CONNECTION:
+      return {...state, loading: false};
+    case actions.SET_CHECK_CONNECTION:
+      return {...state, connected: action.payload};
+    default:
+      return state  
+    }
+ }
+
+
  const userReducer = (state = {}, action) => {
    switch (action.type) {
      case actions.UPDATE_USER:
@@ -138,6 +154,7 @@ const reducer = combineReducers({
   art:artReducer,
   isLoggedIn: isLoggedInReducer,
   alert: alertReducer,
+  config: configReducer,
 })
 
  export default reducer
