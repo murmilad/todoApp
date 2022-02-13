@@ -38,6 +38,7 @@ import * as actions from './actions'
       };
     case actions.UPDATE_ALBUM_DATA:
       state.data[action.payload.albumName].filter((item, index) => item.imageName === action.payload.imageName)[0].resume = action.payload.resume
+      state.data[action.payload.albumName].filter((item, index) => item.imageName === action.payload.imageName)[0].ignored = action.payload.ignored
       state.data[action.payload.albumName] = [...state.data[action.payload.albumName]]
       return {...state};
     case actions.ERROR_ALBUM_LOADING:

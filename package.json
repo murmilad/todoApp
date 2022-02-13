@@ -16,6 +16,7 @@
     "@unimodules/react-native-adapter": "~6.5.0",
     "expo": "^44.0.0",
     "expo-cli": "^5.0.1",
+    "expo-sharing": "~10.1.0",
     "isomorphic-fetch": "^3.0.0",
     "random-int": "^3.0.0",
     "react": "17.0.1",
@@ -40,7 +41,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.3",
-    "twrnc": "^2.2.0"
+    "twrnc": "^2.2.0",
+    "expo-file-system": "~13.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",

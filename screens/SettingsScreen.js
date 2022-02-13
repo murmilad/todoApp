@@ -10,7 +10,6 @@ function SettingsScreen (props) {
     const [server, setServer] = useState()
     const [port, setPort] = useState()
 
-
     const saveCheckConnection = () => {
         dispatch({type: SAVE_CONFIG, payload: {server, port}})
         dispatch(checkConnection());        
@@ -18,8 +17,8 @@ function SettingsScreen (props) {
 
     useLayoutEffect(() => {
         if (props.config) {
-            setServer(props.config.server)
-            setPort(props.config.port)
+            setServer(props.config.server || '192.168.1.95')//'akosarev.info')
+            setPort(props.config.port || '8000')
         }
     }, [props.config]);
 

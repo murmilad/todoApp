@@ -109,11 +109,11 @@ export const fetchArt = async (albumName, imageName) => {
     throw new Error(errorMessage)
 }
 
-export const saveArt = async (albumName, imageName, resume) => {
+export const saveArt = async (albumName, imageName, resume, ignored) => {
     const response = await fetch('http://'+config.server+':'+config.port+'/art/set', {
            method: 'POST',
            headers: {'content-type' : 'application/json'},
-           body: JSON.stringify({albumName, imageName, resume}),
+           body: JSON.stringify({albumName, imageName, resume, ignored}),
     })
     
     if (response.ok){

@@ -24,7 +24,7 @@ function AlbumScreen (props) {
     if (props.album) {
       let unsignedImageCount = props.album.length
       props.album.forEach(element => {
-        if (element.resume) {
+        if (element.resume || element.ignored) {
           unsignedImageCount--
         }
       });

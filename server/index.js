@@ -23,7 +23,7 @@ function getResume() {
   return resume;
 }
 
-csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume"], "|").then(async db => {
+csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume","ignored"], "|").then(async db => {
 
   const app = express()
   app.use(bodyParser.json())
@@ -81,7 +81,7 @@ csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume"],
                 thumbnails.push(file)
 
                 let foundResume  = resume.find((imageName) => imageName.name === file)
-                if (foundResume && foundResume.resume) signedImageCount++
+                if (foundResume && (foundResume.resume || foundResume.ignored)) signedImageCount++
                 imageCount++
               })
           })
@@ -129,6 +129,7 @@ csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume"],
           imageData.albumName = req.params.album
           imageData.imageName = file
           imageData.resume = foundResume ? foundResume.resume : undefined
+          imageData.ignored = foundResume ? foundResume.ignored === "1" : undefined
           albumList.push(imageData)
         })
     })
@@ -194,7 +195,8 @@ csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume"],
           imageData.image = Buffer.from(bitmap).toString('base64')
           imageData.size = {width: dimensions.width, height: dimensions.height}
           imageData.name = file
-          imageData.resume = foundResume && foundResume.length > 0 ? foundResume[0].resume : undefined
+          imageData.resume = foundResume && foundResume.length > 0 ? foundResume[0].resume.replace(/\\"/g, '"') : undefined
+          imageData.ignored = foundResume && foundResume.length > 0 ? foundResume[0].ignored === "1": undefined
         }
     })
 
@@ -202,15 +204,17 @@ csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume"],
   })
   
   app.post('/art/set', async (req, res) => {
-    const {albumName, imageName, resume} = req.body
+    const {albumName, imageName, resume, ignored} = req.body
 
     if (!albumName || !imageName) return res.status(400).send('Missing albumName or imageName')
 
+    console.log(`Set `, {name: imageName, resume: resume, ignored: ignored ? 1 : 0})  
+
     let foundResume = await db.get({name: imageName});
     if (foundResume && foundResume.length > 0) {
-      await db.edit({name: imageName}, {resume: resume});
+      await db.edit({name: imageName}, {resume: resume, ignored: ignored ? "1" : "0"});
     } else {
-      await db.add({name: imageName, resume: resume});
+      await db.add({name: imageName, resume: resume, ignored: ignored ? "1" : "0"});
     }
 
     return res.json({status: 'ok'});

@@ -40,9 +40,9 @@ function GalleryRow (props) {
                                     imageName={props.item.thumbnail_name[Math.min(2,props.item.thumbnail_name.length-1)]}  
                                 />
                             </View>
-                            <View style={ tw`m-1 bg-stone-100  rounded-2 flex-3 overflow-hidden     `}>
+                            <View style={ tw`m-1 bg-stone-700  rounded-2 flex-3 overflow-hidden     `}>
                                 <Text style={tw`m-auto  text-stone-500 font-bold text-xl`} >+{Math.max(props.item.imageCount-3, 0)}
-                                    { props.item.unsignedImageCount > 0 && <Text style={tw`m-auto  text-indigo-600 font-bold text-xl`} > ({props.item.unsignedImageCount})</Text>}
+                                    { props.item.unsignedImageCount > 0 && <Text style={tw`m-auto  text-indigo-400 font-bold text-xl`} > ({props.item.unsignedImageCount})</Text>}
                                 </Text>
                                 
                             </View>

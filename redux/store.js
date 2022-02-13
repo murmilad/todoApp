@@ -9,6 +9,7 @@ import reducer from './reducer'
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  blacklist: ['gallery', 'album', 'image', 'art', 'alert']
 }
 
 const persistedReducer  = persistReducer(persistConfig, reducer)

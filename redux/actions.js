@@ -133,15 +133,16 @@ export  const stopLoading = () =>({
     }
   }
 
-  export const saveArtData = (albumName, imageName, resume) => async dispatch => {
-    dispatch({type: ALERT_START, payload: {albumName, imageName, resume}})
+  export const saveArtData = (albumName, imageName, resume, ignored) => async dispatch => {
+    dispatch({type: ALERT_START, payload: {albumName, imageName, resume, ignored}})
     try {
-      await saveArt(albumName, imageName, resume)
+      await saveArt(albumName, imageName, resume, ignored)
       dispatch({type: ALERT_SUCCESS, payload: {albumName, imageName}})
     } catch(err) {
       dispatch({type: ALERT_ERROR, payload: {albumName, imageName, err: err.message}})
     }
   }
+
 
   export const checkConnection = () => async dispatch => {
     dispatch({type: START_CHECK_CONNECTION})
