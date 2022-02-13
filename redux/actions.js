@@ -85,24 +85,30 @@ export  const stopLoading = () =>({
 
   export const loadGalleryData = () => async dispatch => {
     dispatch({type: START_GALLERY_LOADING})
+    dispatch({type: ALERT_START, payload: {}})
     try {
       const gallery = await fetchGallery()
       dispatch({type: STOP_GALLERY_LOADING})
+      dispatch({type: ALERT_SUCCESS, payload: true})
       dispatch({type: ADD_GALLERY_DATA, payload: gallery})
     } catch(err) {
        dispatch({type: ERROR_GALLERY_LOADING, payload: err.message})
-    }
+       dispatch({type: ALERT_ERROR, payload: {checked: false, err: err.message}})
+      }
   }
 
   export const loadAlbumData = (name) => async dispatch => {
     dispatch({type: START_ALBUM_LOADING})
+    dispatch({type: ALERT_START, payload: {}})
     try {
       const album = await fetchAlbum(name)
       dispatch({type: STOP_ALBUM_LOADING})
+      dispatch({type: ALERT_SUCCESS, payload: true})
       dispatch({type: ADD_ALBUM_DATA, payload: {name,album}})
     } catch(err) {
        dispatch({type: ERROR_ALBUM_LOADING, payload: err.message})
-    }
+       dispatch({type: ALERT_ERROR, payload: {checked: false, err: err.message}})
+      }
   }  
 
   export const loadImageData = (albumName, imageName) => async dispatch => {
@@ -113,7 +119,7 @@ export  const stopLoading = () =>({
       dispatch({type: ADD_IMAGE_DATA, payload: {albumName, imageName, image}})
     } catch(err) {
        dispatch({type: ERROR_IMAGE_LOADING, payload: {albumName, imageName, err: err.message}})
-    }
+      }
   }
 
   export const loadArtData = (albumName, imageName) => async dispatch => {

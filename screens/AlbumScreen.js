@@ -40,9 +40,7 @@ function AlbumScreen (props) {
     })
 
     return (<>
-        {props.err && (<Text style={tw`pt-1 bg-stone-900 text-red-500 flex-1`}>{props.err}</Text>)}
-        {!props.err && props.loading && (<Text style={tw`pt-1 bg-stone-900 text-stone-600 flex-1`} >Loading...</Text>)}
-        {props.album  && (
+        {!props.err && props.album  && (
                 <View style={tw`pt-1 bg-stone-900 flex-1`}>
                           <Album
                             album={props.album}

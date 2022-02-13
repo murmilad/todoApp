@@ -40,7 +40,7 @@ function SettingsScreen (props) {
                 />
                 <Pressable style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-indigo-400 rounded-2 overflow-hidden items-center`}
                     onPress={() => saveCheckConnection()}>
-                <Text style={tw`text-stone-200 text-base `}>Check connection</Text>
+                <Text style={tw`text-stone-200 text-base `}>Change connection</Text>
             </Pressable>
 
             </View>

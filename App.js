@@ -115,12 +115,12 @@ function HomeView() {
 const toastConfig = {
  
   infoToast: ({ text1, props }) => (
-    <View style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone-800 rounded-8 overflow-hidden items-center self-stretch`}>
+    <View style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone_trans-800 rounded-8 overflow-hidden items-center self-stretch`}>
       <Text style={tw`m-2 pl-2 text-stone-500 font-bold text-normal`}  >{text1}</Text>
     </View>
   ),
   errorToast: ({ text1, props }) => (
-    <View style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone-800 rounded-8 overflow-hidden items-center self-stretch`}>
+    <View style={tw`ml-5 mr-5 mt-3 mb-3 p-3 bg-stone_trans-800 rounded-8 overflow-hidden items-center self-stretch`}>
       <Text style={tw`m-2 pl-2 text-red-500 font-bold text-normal`}  >{text1}</Text>
     </View>
   )
@@ -143,11 +143,13 @@ function Main({token, alert, connected, loading}){
         Toast.show({
           type: 'infoToast',
           text1: 'Loading',
+          visibilityTime: 1000,
         })
       } else if (alert.err) {
         Toast.show({
           type: 'errorToast',
           text1: alert.err,
+          visibilityTime: 1000,
         })
         dispatch({type: ALERT_CLEAN})
       } else {
