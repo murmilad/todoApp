@@ -3,7 +3,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { exec } = require('child_process')
 const sizeOf = require('image-size')
-const csvdb = require('csv-database')
 
 const PORT = process.env.PORT || 8000
 
@@ -11,24 +10,58 @@ const GALLERY_PATH = './gallery'
 const RESUME_FOLDER = 'resume'
 const RESUME_FILE = 'resume_test.txt'
 
-function getResume() {
-  let resume = {};
+var fs = require('fs');
+var { parse } = require('csv-parse');
 
-  let data = fs.readFileSync(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, 'utf8')
+const { Client } = require('pg')
+const client = new Client({
+  user: 'postgres',
+  host: '127.0.0.1',
+  database: 'gallery',
+  password: 'postgres',
+  port: 5559,
+})
 
-  data.split('\r\n').map(function(line){ 
-    resume[line.split('|')[0]] = line.split('|')[1]
-  })
+var parser = parse({
+  columns: true,
+  delimiter: '|',
+  quote :'`',
+  columns: ['name', 'resume', 'ignored']
+}, async function (err, records)  {
+  if (err){
+    console.error('Parsing file: '+GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE+' error:' + err);
+    process.exit(1);
+  }
+  //console.log('records:' + JSON.stringify(records));
 
-  return resume;
-}
+  await client.connect()
 
-csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume","ignored"], "|").then(async db => {
-
+  //sync resume file
+  await client.query(`
+    WITH
+      source_data AS (
+        SELECT j->>'name' AS name,
+              j->>'resume' AS resume,
+              (CASE WHEN j->>'ignored' = '1' THEN true ELSE false END)::BOOLEAN AS ignored
+        FROM JSON_ARRAY_ELEMENTS($1::JSON) j
+      ),
+      updated AS (
+        UPDATE resume
+        SET resume = s.resume,
+            ignored = s.ignored
+        FROM source_data s
+        WHERE resume.name = s.name
+        RETURNING resume.name
+      )
+    INSERT INTO resume
+    SELECT name, resume, ignored
+    FROM source_data s
+    WHERE s.name NOT IN (SELECT name FROM updated);`,
+    [JSON.stringify(records)]
+  );
+  
   const app = express()
   app.use(bodyParser.json())
-
-  var fs = require('fs');
 
   // Login
 
@@ -233,6 +266,7 @@ csvdb(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, ["name","resume","
   console.log(`Listening at http://localhost:${PORT}`)  
 })
 
+fs.createReadStream(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE).pipe(parser);
 
 process.on('SIGINT', function() {
   console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );

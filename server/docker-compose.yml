@@ -1,0 +1,21 @@
+version: "3.6"
+services:
+  # DB
+  db:
+    build:
+      context: ./db
+    ports:
+      - 5559:5432
+
+  # WEB
+  web:
+    build:
+      context: ./web
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    volumes: 
+      - /home/alex/git/podpisaka/server/web/gallery:/usr/src/podpisaka/gallery
+volumes:
+  etw-data-volume:
