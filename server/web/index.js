@@ -99,9 +99,10 @@ var parser = parse({
 
 
     let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER
-    let gallery = {}
+    let gallery = []
+    let resume = {}
     let foundResume  = await client.query('SELECT * FROM resume')
-    foundResume.rows.forEach(item => gallery[item.name] = item)
+    foundResume.rows.forEach(item => resume[item.name] = item)
 
     fs.readdirSync(albumPath, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
@@ -121,7 +122,7 @@ var parser = parse({
               .forEach(file => {
                 thumbnails.push(file)
 
-                if (gallery[file] && (gallery[file].resume || gallery[file].ignored)) signedImageCount++
+                if (resume[file] && (resume[file].resume || resume[file].ignored)) signedImageCount++
                 imageCount++
               })
           })
@@ -148,9 +149,9 @@ var parser = parse({
 
   app.get('/album/:album', async (req, res) => {
     
-    let gallery = {}
+    let resume = {}
     let foundResume  = await client.query('SELECT * FROM resume')
-    foundResume.rows.forEach(item => gallery[item.name] = item)
+    foundResume.rows.forEach(item => resume[item.name] = item)
 
     if (!req.params.album) return res.status(400).send('Missing album')
 
@@ -170,8 +171,8 @@ var parser = parse({
           imageData.name = file
           imageData.albumName = req.params.album
           imageData.imageName = file
-          imageData.resume = gallery[file] ? gallery[file].resume : undefined
-          imageData.ignored = gallery[file] ? gallery[file].ignored : undefined
+          imageData.resume = resume[file] ? resume[file].resume : undefined
+          imageData.ignored = resume[file] ? resume[file].ignored : undefined
           albumList.push(imageData)
         })
     })
