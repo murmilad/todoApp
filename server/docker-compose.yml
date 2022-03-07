@@ -9,6 +9,10 @@ services:
 
   # WEB
   web:
+    environment:
+      - DB_HOST
+      - DB_PORT
+      - PORT
     build:
       context: ./web
     depends_on:
