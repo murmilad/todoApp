@@ -14,7 +14,7 @@ services:
     depends_on:
       - db
     ports:
-      - 3000:3000
+      - 8000:8000
     volumes: 
       - /home/alex/git/podpisaka/server/web/gallery:/usr/src/podpisaka/gallery
 volumes:

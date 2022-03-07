@@ -18,10 +18,10 @@ var { stringify } = require('csv-stringify');
 const { Client } = require('pg')
 const client = new Client({
   user: 'postgres',
-  host: '127.0.0.1',
+  host: process.env.DB_HOST || '127.0.0.1',
   database: 'gallery',
   password: 'postgres',
-  port: 5559,
+  port: process.env.DB_PORT || 5559,
 })
 
 var parser = parse({
@@ -119,7 +119,7 @@ var parser = parse({
                 thumbnails.push(file)
 
                 let foundResume  = await client.query('SELECT * FROM resume WHERE name = $1', [file])
-                if (foundResume.rowCount > 0 && (foundResume.rows[0].resume || foundResume.rows[0].ignored)) signedImageCount++
+                if (foundResume.rows.length > 0 && (foundResume.rows[0].resume || foundResume.rows[0].ignored)) signedImageCount++
                 imageCount++
               })
           })
@@ -164,8 +164,8 @@ var parser = parse({
           imageData.name = file
           imageData.albumName = req.params.album
           imageData.imageName = file
-          imageData.resume = foundResume.rowCount > 0 ? foundResume.rows[0].resume : undefined
-          imageData.ignored = foundResume.rowCount > 0 ? foundResume.rows[0].ignored : undefined
+          imageData.resume = foundResume.rows.length > 0 ? foundResume.rows[0].resume : undefined
+          imageData.ignored = foundResume.rows.length > 0 ? foundResume.rows[0].ignored : undefined
           albumList.push(imageData)
         })
     })
@@ -231,8 +231,8 @@ var parser = parse({
           imageData.image = Buffer.from(bitmap).toString('base64')
           imageData.size = {width: dimensions.width, height: dimensions.height}
           imageData.name = file
-          imageData.resume = foundResume.rowCount > 0 ? foundResume.rows[0].resume.replace(/\\"/g, '"') : undefined
-          imageData.ignored = foundResume.rowCount  > 0 ? foundResume.rows[0].ignored : undefined
+          imageData.resume = foundResume.rows.length > 0 ? foundResume.rows[0].resume.replace(/\\"/g, '"') : undefined
+          imageData.ignored = foundResume.rows.length  > 0 ? foundResume.rows[0].ignored : undefined
         }
     })
 
@@ -247,7 +247,7 @@ var parser = parse({
     console.log(`Set `, {name: imageName, resume: resume, ignored: ignored ? 1 : 0})  
 
     let foundResume = await client.query('SELECT * FROM resume WHERE name = $1', [file])
-    if (foundResume.rowCount > 0) {
+    if (foundResume.rows.length > 0) {
       
       await client.query('UPDATE resume SET resume = $2, ignored = $3 WHERE name = $1', [file, resume, ignored])
     } else {
