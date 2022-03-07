@@ -5,7 +5,7 @@ services:
     build:
       context: ./db
     ports:
-      - 5559:5432
+      - ${DB_PORT}:5432
 
   # WEB
   web:
@@ -14,7 +14,7 @@ services:
     depends_on:
       - db
     ports:
-      - 8000:8000
+      - ${PORT}:${PORT}
     volumes: 
       - /home/alex/git/podpisaka/server/web/gallery:/usr/src/podpisaka/gallery
 volumes:
