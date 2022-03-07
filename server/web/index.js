@@ -253,12 +253,12 @@ var parser = parse({
 
     console.log(`Set `, {name: imageName, resume: resume, ignored: ignored ? 1 : 0})  
 
-    let foundResume = await client.query('SELECT * FROM resume WHERE name = $1', [file])
+    let foundResume = await client.query('SELECT * FROM resume WHERE name = $1', [imageName])
     if (foundResume.rows.length > 0) {
       
-      await client.query('UPDATE resume SET resume = $2, ignored = $3 WHERE name = $1', [file, resume, ignored])
+      await client.query('UPDATE resume SET resume = $2, ignored = $3 WHERE name = $1', [imageName, resume, ignored])
     } else {
-      await client.query('INSERT INTO resume(name, resume, ignored) VALUES($1, $2, $3)', [file, resume, ignored])
+      await client.query('INSERT INTO resume(name, resume, ignored) VALUES($1, $2, $3)', [imageName, resume, ignored])
     }
 
     return res.json({status: 'ok'});
