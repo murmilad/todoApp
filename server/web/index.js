@@ -99,7 +99,10 @@ var parser = parse({
 
 
     let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER
-    let gallery = []
+    let gallery = {}
+    let foundResume  = await client.query('SELECT * FROM resume')
+    foundResume.forEach(item => gallery[item.name] = item)
+
     fs.readdirSync(albumPath, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
       .map(dirent => dirent.name)
@@ -115,16 +118,17 @@ var parser = parse({
           .forEach(folder => {
 
             fs.readdirSync(albumPath + '/' + main_folder + '/' + folder)
-              .forEach( async file => {
+              .forEach(file => {
                 thumbnails.push(file)
 
-                let foundResume  = await client.query('SELECT * FROM resume WHERE name = $1', [file])
-                if (foundResume.rows.length > 0 && (foundResume.rows[0].resume || foundResume.rows[0].ignored)) signedImageCount++
+                if (gallery[file] && (gallery[file].resume || gallery[file].ignored)) signedImageCount++
                 imageCount++
               })
           })
 
         let albumData = {}
+        console.log('found imageCount ' + imageCount )
+
 
         albumData.thumbnail_name = thumbnails
         albumData.name = main_folder
@@ -144,6 +148,9 @@ var parser = parse({
 
   app.get('/album/:album', async (req, res) => {
     
+    let gallery = {}
+    let foundResume  = await client.query('SELECT * FROM resume')
+    foundResume.forEach(item => gallery[item.name] = item)
 
     if (!req.params.album) return res.status(400).send('Missing album')
 
@@ -158,14 +165,13 @@ var parser = parse({
         fs.readdirSync(albumPath + '/' + folder).forEach(async file =>  {
 
           let imageData = {}
-          let foundResume  = await client.query('SELECT * FROM resume WHERE name = $1', [file])
 
           imageData.thumbnail_name = file
           imageData.name = file
           imageData.albumName = req.params.album
           imageData.imageName = file
-          imageData.resume = foundResume.rows.length > 0 ? foundResume.rows[0].resume : undefined
-          imageData.ignored = foundResume.rows.length > 0 ? foundResume.rows[0].ignored : undefined
+          imageData.resume = gallery[file] ? gallery[file].resume : undefined
+          imageData.ignored = gallery[file] ? gallery[file].ignored : undefined
           albumList.push(imageData)
         })
     })
