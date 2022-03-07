@@ -101,7 +101,7 @@ var parser = parse({
     let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER
     let gallery = {}
     let foundResume  = await client.query('SELECT * FROM resume')
-    foundResume.forEach(item => gallery[item.name] = item)
+    foundResume.rows.forEach(item => gallery[item.name] = item)
 
     fs.readdirSync(albumPath, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
@@ -150,7 +150,7 @@ var parser = parse({
     
     let gallery = {}
     let foundResume  = await client.query('SELECT * FROM resume')
-    foundResume.forEach(item => gallery[item.name] = item)
+    foundResume.rows.forEach(item => gallery[item.name] = item)
 
     if (!req.params.album) return res.status(400).send('Missing album')
 
