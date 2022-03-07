@@ -238,7 +238,7 @@ var parser = parse({
           imageData.image = Buffer.from(bitmap).toString('base64')
           imageData.size = {width: dimensions.width, height: dimensions.height}
           imageData.name = file
-          imageData.resume = foundResume.rows.length > 0 ? foundResume.rows[0].resume.replace(/\\"/g, '"') : undefined
+          imageData.resume = (foundResume.rows.length > 0 && foundResume.rows[0].resume) ? foundResume.rows[0].resume.replace(/\\"/g, '"') : undefined
           imageData.ignored = foundResume.rows.length  > 0 ? foundResume.rows[0].ignored : undefined
         }
     })
