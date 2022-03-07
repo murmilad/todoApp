@@ -16,6 +16,6 @@ services:
     ports:
       - ${PORT}:${PORT}
     volumes: 
-      - /home/alex/git/podpisaka/server/web/gallery:/usr/src/podpisaka/gallery
+      - ${GALLERY_PATH}:/usr/src/podpisaka/gallery
 volumes:
   etw-data-volume:
