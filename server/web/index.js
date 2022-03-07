@@ -7,7 +7,7 @@ const checksum = require("json-checksum")
 
 const PORT = process.env.PORT || 8000
 
-const GALLERY_PATH = './gallery'
+const GALLERY_PATH = '/usr/src/gallery'
 const RESUME_FOLDER = 'resume'
 const RESUME_FILE = 'resume_test.txt'
 
