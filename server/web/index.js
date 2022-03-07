@@ -3,6 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { exec } = require('child_process')
 const sizeOf = require('image-size')
+const checksum = require("json-checksum")
 
 const PORT = process.env.PORT || 8000
 
@@ -12,6 +13,7 @@ const RESUME_FILE = 'resume_test.txt'
 
 var fs = require('fs');
 var { parse } = require('csv-parse');
+var { stringify } = require('csv-stringify');
 
 const { Client } = require('pg')
 const client = new Client({
@@ -58,8 +60,12 @@ var parser = parse({
     FROM source_data s
     WHERE s.name NOT IN (SELECT name FROM updated);`,
     [JSON.stringify(records)]
-  );
-  
+  )
+  let table_json = await client.query('SELECT * FROM resume');
+
+  console.log(`Checksum ` + checksum(table_json.rows))  
+  await client.query('UPDATE resume_checksum SET table_checksum = $1, file_checksum = $1', [checksum(table_json.rows)]) 
+
   const app = express()
   app.use(bodyParser.json())
 
@@ -91,7 +97,6 @@ var parser = parse({
 
   app.get('/gallery',async (req, res) =>  {
 
-    let resume = await db.get();
 
     let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER
     let gallery = []
@@ -113,8 +118,8 @@ var parser = parse({
               .forEach( async file => {
                 thumbnails.push(file)
 
-                let foundResume  = resume.find((imageName) => imageName.name === file)
-                if (foundResume && (foundResume.resume || foundResume.ignored)) signedImageCount++
+                let foundResume  = await client.query('SELECT * FROM resume WHERE name = $1', [file])
+                if (foundResume.rowCount > 0 && (foundResume.rows[0].resume || foundResume.rows[0].ignored)) signedImageCount++
                 imageCount++
               })
           })
@@ -143,8 +148,6 @@ var parser = parse({
     if (!req.params.album) return res.status(400).send('Missing album')
 
     
-    let resume = await db.get();
-
     let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER + '/' + req.params.album;
     let albumList = [];
     fs.readdirSync(albumPath, { withFileTypes: true })
@@ -152,17 +155,17 @@ var parser = parse({
       .map(dirent => dirent.name)
       .forEach(folder => {
 
-        fs.readdirSync(albumPath + '/' + folder).forEach(file => {
+        fs.readdirSync(albumPath + '/' + folder).forEach(async file =>  {
 
           let imageData = {}
-          let foundResume  = resume.find((imageName) => imageName.name === file)
+          let foundResume  = await client.query('SELECT * FROM resume WHERE name = $1', [file])
 
           imageData.thumbnail_name = file
           imageData.name = file
           imageData.albumName = req.params.album
           imageData.imageName = file
-          imageData.resume = foundResume ? foundResume.resume : undefined
-          imageData.ignored = foundResume ? foundResume.ignored === "1" : undefined
+          imageData.resume = foundResume.rowCount > 0 ? foundResume.rows[0].resume : undefined
+          imageData.ignored = foundResume.rowCount > 0 ? foundResume.rows[0].ignored : undefined
           albumList.push(imageData)
         })
     })
@@ -214,7 +217,7 @@ var parser = parse({
     let albumPath = GALLERY_PATH + '/' + RESUME_FOLDER + '/' + req.params.album;
 
     let file = req.params.art
-    let foundResume = await db.get({name: file});
+    let foundResume  = await client.query('SELECT * FROM resume WHERE name = $1', [file])
     let imageData = {}
     fs.readdirSync(albumPath, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
@@ -228,8 +231,8 @@ var parser = parse({
           imageData.image = Buffer.from(bitmap).toString('base64')
           imageData.size = {width: dimensions.width, height: dimensions.height}
           imageData.name = file
-          imageData.resume = foundResume && foundResume.length > 0 ? foundResume[0].resume.replace(/\\"/g, '"') : undefined
-          imageData.ignored = foundResume && foundResume.length > 0 ? foundResume[0].ignored === "1": undefined
+          imageData.resume = foundResume.rowCount > 0 ? foundResume.rows[0].resume.replace(/\\"/g, '"') : undefined
+          imageData.ignored = foundResume.rowCount  > 0 ? foundResume.rows[0].ignored : undefined
         }
     })
 
@@ -243,15 +246,42 @@ var parser = parse({
 
     console.log(`Set `, {name: imageName, resume: resume, ignored: ignored ? 1 : 0})  
 
-    let foundResume = await db.get({name: imageName});
-    if (foundResume && foundResume.length > 0) {
-      await db.edit({name: imageName}, {resume: resume, ignored: ignored ? "1" : "0"});
+    let foundResume = await client.query('SELECT * FROM resume WHERE name = $1', [file])
+    if (foundResume.rowCount > 0) {
+      
+      await client.query('UPDATE resume SET resume = $2, ignored = $3 WHERE name = $1', [file, resume, ignored])
     } else {
-      await db.add({name: imageName, resume: resume, ignored: ignored ? "1" : "0"});
+      await client.query('INSERT INTO resume(name, resume, ignored) VALUES($1, $2, $3)', [file, resume, ignored])
     }
 
     return res.json({status: 'ok'});
   })
+
+
+  setInterval(async function(){
+    let table_checksum = await client.query('SELECT table_checksum FROM resume_checksum');
+    let table_json = await client.query('SELECT * FROM resume');
+    if (table_checksum.rows[0].table_checksum !== checksum(table_json.rows)) {
+      await client.query('UPDATE resume_checksum SET table_checksum = $1', [checksum(table_json.rows)])
+      stringify(table_json.rows, {
+        header: false,
+        quote :'`',
+        delimiter: '|',
+        columns: ['name', 'resume', 'ignored'],
+        cast: {
+          boolean: value => value ? '1': '0'
+        }
+      }, function (err, output) {
+          fs.writeFile(GALLERY_PATH + '/' + RESUME_FOLDER + '/' + RESUME_FILE, output, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("File saved successfully!");
+        });
+      })
+    }
+
+  }, 1000 * 5)//* 60 * 10);
 
   // catch 404
   app.use((req, res, next) => {
