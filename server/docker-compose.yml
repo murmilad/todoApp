@@ -9,6 +9,7 @@ services:
 
   # WEB
   web:
+    user: "${UID}:${GID}"
     environment:
       - DB_HOST
       - DB_PORT
